@@ -1,0 +1,55 @@
+Country,Sex,Attribute,Description,Total
+Bhutan,F,Age,Under 14,523
+Bhutan,F,Age,Age 14 to 20,289
+Bhutan,F,Age,Age 21 to 30,372
+Bhutan,F,Age,Age 31 to 40,358
+Bhutan,F,Age,Age 41 to 50,228
+Bhutan,F,Age,Age 51 to 64,135
+Bhutan,F,Age,Age 65 and Over,53
+Bhutan,M,Age,Under 14,507
+Bhutan,M,Age,Age 14 to 20,300
+Bhutan,M,Age,Age 21 to 30,226
+Bhutan,M,Age,Age 31 to 40,216
+Bhutan,M,Age,Age 41 to 50,190
+Bhutan,M,Age,Age 51 to 64,159
+Bhutan,M,Age,Age 65 and Over,84
+Bhutan,F,Religion,Buddhist,605
+Bhutan,F,Religion,Christian,386
+Bhutan,F,Religion,Hindu,636
+Bhutan,F,Religion,Kirat,329
+Bhutan,F,Religion,Moslem,1
+Bhutan,F,Religion,No Religion,1
+Bhutan,M,Religion,Buddhist,524
+Bhutan,M,Religion,Christian,340
+Bhutan,M,Religion,Hindu,501
+Bhutan,M,Religion,Kirat,315
+Bhutan,M,Religion,Moslem,1
+Bhutan,M,Religion,No Religion,1
+Bhutan,F,Ethnicity,Lhotsampa ,1952
+Bhutan,F,Ethnicity,Other,6
+Bhutan,M,Ethnicity,Lhotsampa ,1677
+Bhutan,M,Ethnicity,Other,5
+Bhutan,F,Education,Bio Data not Complete,583
+Bhutan,F,Education,Intermediate,322
+Bhutan,F,Education,Kindergarten,114
+Bhutan,F,Education,Primary,618
+Bhutan,F,Education,Professional,1
+Bhutan,F,Education,Secondary,262
+Bhutan,F,Education,Technical School,4
+Bhutan,F,Education,University/College,22
+Bhutan,F,Education,Unknown,32
+Bhutan,M,Education,Bio Data not Complete,470
+Bhutan,M,Education,Intermediate,257
+Bhutan,M,Education,Kindergarten,100
+Bhutan,M,Education,Primary,619
+Bhutan,M,Education,Professional,0
+Bhutan,M,Education,Secondary,201
+Bhutan,M,Education,Technical School,1
+Bhutan,M,Education,University/College,29
+Bhutan,M,Education,Unknown,5
+Bhutan,F,Language,Assamese,1
+Bhutan,F,Language,Nepali,1957
+Bhutan,F,Language,Other Minor Languages,0
+Bhutan,M,Language,Assamese,0
+Bhutan,M,Language,Nepali,1678
+Bhutan,M,Language,Other Minor Languages,4
