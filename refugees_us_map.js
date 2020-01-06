@@ -108,8 +108,6 @@ var createMap = function (svg, data) {
         .domain(d3.range(min_arrivals, max_arrivals))
         .range(d3.schemeBlues[9]);
     
-    console.log(min_arrivals);
-
     var colorLegend = d3.legendColor()
         .labelFormat(d3.format(".0f"))
         .scale(colorScale)
