@@ -1,11 +1,11 @@
 var ctx = {
-    w: 960,
+    w: 1100,
     h: 500
 };
 
 
 
-var transformData = function (data,us_states_abb,us_coord) {
+var transformData = function (data, us_states_abb, us_coord) {
     var placements = {};
     for (var i = 0; i < data.length; i++) {
         var line = data[i];
@@ -14,9 +14,9 @@ var transformData = function (data,us_states_abb,us_coord) {
         var city = line["Placement City"];
         var value = parseInt(line["CY 2017"]);
         var state_abb = "";
-        for(var j=0;j<us_states_abb.length;j++){
+        for (var j = 0; j < us_states_abb.length; j++) {
             var current = us_states_abb[j];
-            if(current.name == state){
+            if (current.name == state) {
                 state_abb = current.abbreviation;
                 break;
             }
@@ -25,10 +25,10 @@ var transformData = function (data,us_states_abb,us_coord) {
         var longitude = null;
         var latitude = null;
 
-        for(var j=0; j<us_coord.length;j++){
+        for (var j = 0; j < us_coord.length; j++) {
             var current = us_coord[j];
-            if(current.fields.state == state_abb){
-                if(current.fields.city == city){
+            if (current.fields.state == state_abb) {
+                if (current.fields.city == city) {
                     longitude = current.fields.longitude;
                     latitude = current.fields.latitude;
                     break;
@@ -44,8 +44,8 @@ var transformData = function (data,us_states_abb,us_coord) {
             placements[nationality][state][city] = {};
         if (!("value" in placements[nationality][state][city]))
             placements[nationality][state][city]["value"] = 0;
-        if(longitude != null){
-            if(!("longitude" in placements[nationality][state][city])){
+        if (longitude != null) {
+            if (!("longitude" in placements[nationality][state][city])) {
                 placements[nationality][state][city]["longitude"] = longitude;
                 placements[nationality][state][city]["latitude"] = latitude;
             }
@@ -61,7 +61,7 @@ var createMap = function (svg, data) {
     var us_states = data[1];
     var us_states_abb = data[2];
     var us_coord = data[3];
-    var arrivals = transformData(data[0],us_states_abb,us_coord);
+    var arrivals = transformData(data[0], us_states_abb, us_coord);
 
     var min_arrivals = Number.MAX_VALUE;
     var max_arrivals = Number.MIN_VALUE;
@@ -69,16 +69,17 @@ var createMap = function (svg, data) {
     var cities = [];
     for (let state in arrivals[nationality]) {
         var value = 0;
-        
+
         for (let city in arrivals[nationality][state]) {
             current = arrivals[nationality][state][city];
             value += current["value"];
-            if("longitude" in current){
-            cities.push({
-                "name":city,
-                "lon": current.longitude,
-                "lat": current.latitude,
-                "value": current.value});
+            if ("longitude" in current) {
+                cities.push({
+                    "name": city,
+                    "lon": current.longitude,
+                    "lat": current.latitude,
+                    "value": current.value
+                });
             }
         }
         if (value > max_arrivals) {
@@ -97,30 +98,31 @@ var createMap = function (svg, data) {
             }
         }
     }
-    // console.log(us_states.features);
 
-    // Append Div for tooltip to SVG
-var div = d3.select("body")
-.append("div")   
-.attr("class", "tooltip")               
-.style("opacity", 0);
-    var color = d3.scaleThreshold()
+    var div = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+   
+    var colorScale = d3.scaleQuantile()
         .domain(d3.range(min_arrivals, max_arrivals))
         .range(d3.schemeBlues[9]);
+    
+    console.log(min_arrivals);
 
-        var legend = d3.select('svg')
-        .append("g")
-        .selectAll("g")
-        .data(color.domain())
-        .enter()
-        .append('g')
-          .attr('class', 'legend')
-          .attr('transform', function(d, i) {
-            var height = 1000;
-            var x = 0;
-            var y = i * height;
-            return 'translate(' + x + ',' + y + ')';
-        });
+    var colorLegend = d3.legendColor()
+        .labelFormat(d3.format(".0f"))
+        .scale(colorScale)
+        .shapePadding(5)
+        .shapeWidth(50)
+        .shapeHeight(20)
+        .labelOffset(12)
+        .title("Number of Arrivals");
+
+    svg.append("g")
+        .attr("transform", "translate(900, 200)")
+        .call(colorLegend);
+
     var projection = d3.geoAlbersUsa();
     var path = d3.geoPath()
         .projection(projection);
@@ -138,61 +140,62 @@ var div = d3.select("body")
             var value = d.properties.arrivals;
             if (value) {
                 //If value exists…
-                return color(value);
+                return colorScale(value);
             } else {
                 //If value is undefined…
                 return "rgb(213,222,217)";
             };
 
-        }).on("mouseover", function(d) {  
-            if("arrivals" in d.properties){    
-            div.transition()        
-                 .duration(200)      
-               .style("opacity", .9);      
-               div.text(d.properties.arrivals)
-               .style("left", (d3.event.pageX) + "px")     
-               .style("top", (d3.event.pageY - 28) + "px");    
+        }).on("mouseover", function (d) {
+            if ("arrivals" in d.properties) {
+                div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                div.text(d.properties.arrivals)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
             }
-        })   
-    
+        })
+
         // fade out tooltip on mouse out               
-        .on("mouseout", function(d) {       
-            div.transition()        
-               .duration(500)      
-               .style("opacity", 0)});
+        .on("mouseout", function (d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0)
+        });
 
 
-        svg.selectAll("circle")
+    svg.selectAll("circle")
         .data(cities)
         .enter()
         .append("circle")
-        .attr("cx", function(d) {
+        .attr("cx", function (d) {
             return projection([d.lon, d.lat])[0];
         })
-        .attr("cy", function(d) {
+        .attr("cy", function (d) {
             return projection([d.lon, d.lat])[1];
         })
-        .attr("r", function(d) {
+        .attr("r", function (d) {
             return Math.sqrt(d.value);
         })
-        .style("fill", "rgb(217,91,67)")	
+        .style("fill", "rgb(217,91,67)")
         .style("opacity", 0.85)
-        .on("mouseover", function(d) {      
-                div.transition()        
-                     .duration(200)      
-                   .style("opacity", .9);      
-                   div.text(d.name+": "+d.value)
-                   .style("left", (d3.event.pageX) + "px")     
-                   .style("top", (d3.event.pageY - 28) + "px");    
-            })   
-        
-            // fade out tooltip on mouse out               
-            .on("mouseout", function(d) {       
-                div.transition()        
-                   .duration(500)      
-                   .style("opacity", 0);   
-            });
-        
+        .on("mouseover", function (d) {
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.text(d.name + ": " + d.value)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
+        })
+
+        // fade out tooltip on mouse out               
+        .on("mouseout", function (d) {
+            div.transition()
+                .duration(500)
+                .style("opacity", 0);
+        });
+
 
 };
 
