@@ -8,14 +8,17 @@
 				font-family: 'Roboto';
 				font-size: 16px;
 			}
+
 			.states {
 				fill: lightgray;
 				stroke: #fff;
 				stroke-linejoin: round;
 			}
+
 			path:hover {
 				fill-opacity: .7;
 			}
+
 			/* Style for Custom Tooltip */
 			div.tooltip {
 				position: absolute;
@@ -29,6 +32,9 @@
 				border-radius: 8px;
 				pointer-events: none;
 			}
+
+			/* #map {float:left; display:inline}
+			#tree {float:left; display:inline} */
 		</style>
 		<meta charset="UTF-8">
 		<title>Refugee integration and resettlement in the United States between 2011 and 2017</title>
@@ -39,15 +45,40 @@
 	</head>
 
 	<body onload="createViz();">
-		<h1 style="font-family:Roboto;">Refugee integration and resettlement in the United States between 2011 and 2017
-		</h1>
-		<div id="tree"></div>
-		<div id="map"></div>
-		<p1>The map shows the amount of refugees that were settled from Bhutan in 2017 in different states and towns of the USA.
-			Interaction will be added later in order to showcase more countries and traverse different years.
 
-			On the other hand, the tree shows the distribution of the entries within the household, i.e. how many entries to refer to the applicant him/herself and how many to his/her family members. 
-		</p1>
+		</h1>
+		<table>
+			<tr>
+				<td colspan="2" align="center">
+					<h1 style="font-family:Roboto;">Refugee integration and resettlement in the United States between
+						2011 and 2017
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div id="map"></div>
+				</td>
+				<td>
+					<div id="tree"></div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<p1>The map shows the amount of refugees that were settled from Bhutan in 2017 in different states
+						and towns of the USA.
+						Interaction will be added later in order to showcase more countries and traverse different
+						years.
+
+						On the other hand, the tree shows the distribution of the entries within the household, i.e. how
+						many entries to refer to the applicant him/herself and how many to his/her family members.
+					</p1>
+					</tdcolspan="2">
+			</tr>
+		</table>
+
+
+
 	</body>
 
 	</html>
