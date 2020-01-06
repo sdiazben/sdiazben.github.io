@@ -21,7 +21,7 @@ var parentMale = d3.csv(source, function(d) {
   if(d["Year Of Entry"]== y &&
     //d["Country Of Birth"] == c && 
     d["Relationship To Head Of Household"] in ["Parent/Guardian"] //"Parent / Stepparent / foster parent / guardian" && //NECESITAMOS CAMBIARLO A "PARENT" "IN-LAW" "APPLICANT" "PARTNER" "CHILDREN" Y "OTHER"
-    d.Gender == "Male"){
+    d["Gender"] == "Male"){
       return d
   };
 }).then(function(d) {
