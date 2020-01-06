@@ -204,6 +204,7 @@ var createViz = function () {
         .attr("width", ctx.w)
         .attr("height", ctx.h);
     loadData(svg);
+    window.onload = drawTree();
 };
 
 var loadData = function (svg) {
