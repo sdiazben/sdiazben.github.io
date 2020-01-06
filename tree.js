@@ -1,4 +1,4 @@
-window.onload = function drawTree(){
+function drawTree(){
 // -----------------------------------------
 //VARIABLES
 // -----------------------------------------
