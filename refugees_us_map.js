@@ -203,6 +203,7 @@ var createViz = function () {
         .attr("width", ctx.w)
         .attr("height", ctx.h);
     loadData(svg);
+    drawTree();
 };
 
 var loadData = function (svg) {
