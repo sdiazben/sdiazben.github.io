@@ -1,11 +1,19 @@
+let table;
+
+function preload(){
+  table = loadTable ("data/survey_data_b.csv","csv","header");
+}
+
 window.onload = function drawTree(){
 // -----------------------------------------
 //VARIABLES
 // -----------------------------------------
 var target = "#tree" //HTML target ID in which to create the SVG
 var source = "data/survey_data_b.csv" //data source
-var y = "2015 or later" //year
-va//r c = "Bhutan" //country
+var numParentMale;
+var numRows;
+//var y = "2015 or later" //year
+//r c = "Bhutan" //country
 
 //FORMAT VARIABLES
 var sw = 5 //stroke width
@@ -17,18 +25,36 @@ var paddingY = maxR/2
 
 //DATA VARIABLES --> TO-DO: get the number of registries for each of the circles in the tree and apply "regla de 3" to adjust circle sizes. Following code filters registers
 // and manages to print in console the number of registries for Male Parents of applicants, but I cannot store it in a global variable to resize the circles :/ 
-var parentMale = d3.csv(source, function(d) {
-  if(d["Year Of Entry"]== y &&
-    //d["Country Of Birth"] == c && 
-    d["Relationship To Head Of Household"] in ["Parent/Guardian"] //"Parent / Stepparent / foster parent / guardian" && //NECESITAMOS CAMBIARLO A "PARENT" "IN-LAW" "APPLICANT" "PARTNER" "CHILDREN" Y "OTHER"
-    d.Gender == "Male"){
+var total = d3.csv(source, function(d){
       return d
-  };
-}).then(function(d) {
-  console.log(d.length);
+  ;}).then(function(d) {
+
+  numRows = d.length;
+  
+
+    var parentMale = d3.csv(source, function(d) {
+      if(//d["Year Of Entry"]== y &&
+        //d["Country Of Birth"] == c && 
+        d["Relationship"] == "Parent/Guardian" && //"Parent / Stepparent / foster parent / guardian" && //NECESITAMOS CAMBIARLO A "PARENT" "IN-LAW" "APPLICANT" "PARTNER" "CHILDREN" Y "OTHER"
+        d["Gender"] == "Male"){
+          return d
+          };
+      }).then(function(d) {
+      
+      numParentMale = d.length;
+      console.log("nr "+numRows);
+      console.log("npm "+numParentMale);
+
+      cx = maxR;
+      cy = maxR + paddingY;
+
+      svgContainer.append("circle")
+      .attr("cx", cx)
+      .attr("cy", cy)
+      .attr("r", maxR*(numParentMale/numRows))
+      .style("fill","blue")
+    });
 });
-
-
 
 //["Year Of Entry"]
 //["Country Of Birth"]
@@ -51,7 +77,7 @@ svgContainer.append("line")
     .style("stroke-width", sw)
     .style("stroke-linecap", "round")
     .attr("x1", maxR)
-    .attr("y1", maxR + paddingY)
+    .attr("y1", maxR+ paddingY)
     .attr("x2", maxR)
     .attr("y2", maxR*2 + paddingY*2);
 svgContainer.append("line")
@@ -169,12 +195,28 @@ svgContainer.append("text")
 cx = maxR;
 cy = maxR + paddingY;
 
-svgContainer.append("circle")
-  .attr("cx", cx)
-  .attr("cy", cy)
-  .attr("r", maxR)
-  .style("fill","blue")
+
+//svgContainer.append("circle")
+  //.attr("cx", cx)
+  //.attr("cy", cy)
+  //.attr("r", maxR*(parentMale/total))
+  //.style("fill","blue")
   //.attr('transform', "translate(150,50)");
+
+ setTimeout(function(){
+
+  cx = maxR;
+  cy = maxR + paddingY;
+
+  svgContainer.append("circle")
+    .attr("cx", cx)
+    .attr("cy", cy)
+    .attr("r", maxR*(numParentMale/numRows))
+    .style("fill","blue")
+    //.attr('transform', "translate(150,50)");
+
+},100);
+ 
 
 cx += maxR*2 + paddingX
 
