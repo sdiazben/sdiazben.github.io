@@ -1,19 +1,50 @@
 <DOCTYPE! html>
-<html>
-	<head> 
+	<html>
+
+	<head>
 		<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
 		<style>
-		body {
-		    font-family: 'Roboto';font-size: 16px;
-		}
+			body {
+				font-family: 'Roboto';
+				font-size: 16px;
+			}
+
+			.states {
+				fill: lightgray;
+				stroke: #fff;
+				stroke-linejoin: round;
+			}
+
+			path:hover {
+				fill-opacity: .7;
+			}
+
+			/* Style for Custom Tooltip */
+			div.tooltip {
+				position: absolute;
+				text-align: center;
+				width: 60px;
+				height: 28px;
+				padding: 2px;
+				font: 12px sans-serif;
+				background: white;
+				border: 0px;
+				border-radius: 8px;
+				pointer-events: none;
+			}
 		</style>
 		<meta charset="UTF-8">
-		<title>Refugee integration and resettlement in the United States between 2011 and 2017</title> 
+		<title>Refugee integration and resettlement in the United States between 2011 and 2017</title>
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<script type="text/javascript" src="tree.js"></script>
+		<script type="text/javascript" src="refugees_us_map.js"></script>
 	</head>
+
 	<body>
-		<h1 style="font-family:Roboto;">Refugee integration and resettlement in the United States between 2011 and 2017</h1>
-	<div id="tree"></div>
-</body>
-</html>
+		<h1 style="font-family:Roboto;">Refugee integration and resettlement in the United States between 2011 and 2017
+		</h1>
+		<div id="tree"></div>
+		<div id="map"></div>
+	</body>
+
+	</html>
