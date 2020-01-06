@@ -5,7 +5,7 @@ window.onload = function drawTree(){
 var target = "#tree" //HTML target ID in which to create the SVG
 var source = "data/survey_data_b.csv" //data source
 var y = "2015 or later" //year
-var c = "Bhutan" //country
+va//r c = "Bhutan" //country
 
 //FORMAT VARIABLES
 var sw = 5 //stroke width
@@ -19,8 +19,8 @@ var paddingY = maxR/2
 // and manages to print in console the number of registries for Male Parents of applicants, but I cannot store it in a global variable to resize the circles :/ 
 var parentMale = d3.csv(source, function(d) {
   if(d["Year Of Entry"]== y &&
-    d["Country Of Birth"] == c && 
-    d["Relationship To Head Of Household"] == "Parent / Stepparent / foster parent / guardian" && //NECESITAMOS CAMBIARLO A "PARENT" "IN-LAW" "APPLICANT" "PARTNER" "CHILDREN" Y "OTHER"
+    //d["Country Of Birth"] == c && 
+    d["Relationship To Head Of Household"] in ["Parent/Guardian"] //"Parent / Stepparent / foster parent / guardian" && //NECESITAMOS CAMBIARLO A "PARENT" "IN-LAW" "APPLICANT" "PARTNER" "CHILDREN" Y "OTHER"
     d.Gender == "Male"){
       return d
   };
@@ -45,7 +45,7 @@ var svgContainer = d3.select(target)
   .attr("height", maxR*7 + paddingY*5);
 
 //WE DRAW THE LINES
-//Applicant's fathers
+//Applicant's parents
 svgContainer.append("line")
     .style("stroke", "black")
     .style("stroke-width", sw)
@@ -79,7 +79,7 @@ svgContainer.append("line")
     .attr("x2", maxR*2 + paddingX*.5)
     .attr("y2", maxR*3 + paddingY*3);
 
-//Partner's fathers (+4+4)
+//Partner's parents (+4+4)
 svgContainer.append("line")
     .style("stroke", "black")
     .style("stroke-width", sw)
