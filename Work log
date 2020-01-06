@@ -9,3 +9,9 @@ Sara Díaz:
 Ricardo Rojas:
 - Created template for Family tree of applicants using d3
 - Loaded and manipulated data to display real data on the Family tree
+
+Woody Hojeily:
+- Create map viz using d3
+- Loaded and manipulated refugee data asynchronously on viz
+- Added tooltips that appear when mouse is hovering over region
+- Added legend
