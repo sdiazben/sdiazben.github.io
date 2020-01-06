@@ -1,7 +1,11 @@
 WORK LOG
 
 Sara Díaz: 
-- Created basic structure of the html 
+- Created basic structure of the html and web server setup 
 - Cleaned and filtered the data: 
   - for one country - Buthan for the years after 2015
   - decided on the relevant fields 
+
+Ricardo Rojas:
+- Created template for Family tree of applicants using d3
+- Loaded and manipulated data to display real data on the Family tree
