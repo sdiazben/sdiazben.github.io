@@ -8,59 +8,63 @@ body {
 	align-content: center;
 	text-align: center;
 }
-#title{
-	width:90%;
+
+#title {
+	width: 90%;
 	margin: 0% 5%;
 }
 
-#container{
-	width : 100%;
+#container {
+	width: 100%;
 	padding: 0 !important;
 	margin: 0 !important;
 }
 
-#loading{
+#loading {
 	align-content: center;
 }
 
-#map{
-	width : 75% !important;
+#map {
+	width: 75% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 }
 
-#tree{
+#tree {
 	width: 25% !important;
 	padding: 0 !important;
 	margin: 0 !important;
 }
 
-#conclusions{
-	width : 90%;
+#conclusions {
+	width: 90%;
 	margin: 0% 5% 1% 5%;
 	text-align: justify;
 }
 
 /* ALL BOUNDING LINES */
 
-path, line, .connectingLine, .legendCircle{
+path,
+line,
+.connectingLine,
+.legendCircle {
 	stroke: #ccc;
 	stroke-width: 1;
 	stroke-linejoin: round;
 	stroke-linecap: round;
 }
 
-.connectingLine{
+.connectingLine {
 	stroke-width: 5 !important;
 }
 
 /* LEGENDS */
-.legendText{
+.legendText {
 	font-size: 12;
 }
 
-.legendCircle{
-	fill : none;
+.legendCircle {
+	fill: none;
 	stroke: #bbb;
 	stroke-dasharray: 3;
 }
@@ -72,6 +76,12 @@ path, line, .connectingLine, .legendCircle{
 
 circle:hover {
 	fill-opacity: .7;
+	stroke: black;
+}
+
+.states:hover {
+	fill-opacity: .7;
+	stroke-width: 2;
 }
 
 /* Style for Custom Tooltip */
