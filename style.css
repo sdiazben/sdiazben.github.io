@@ -10,40 +10,44 @@ body {
 }
 #title{
 	width:90%;
-	margin: 0% 5%;
+	margin: 0% 5% 5% 5%;
 }
 
 #container{
 	width : 100%;
 	padding: 0 !important;
 	margin: 0 !important;
+	display: table-row;
 }
 
 #loading{
 	align-content: center;
+	display: table-cell;
 }
 
 #map{
 	width : 75% !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	display: table-cell;
 }
 
 #tree{
 	width: 25% !important;
 	padding: 0 !important;
 	margin: 0 !important;
+	display: table-cell;
 }
 
 #conclusions{
 	width : 90%;
-	margin: 0% 5% 1% 5%;
+	margin: 5% 5% 1% 5%;
 	text-align: justify;
 }
 
 /* ALL BOUNDING LINES */
 
-path, line, .connectingLine, .legendCircle{
+path, rect, line, .connectingLine, .legendCircle{
 	stroke: #ccc;
 	stroke-width: 1;
 	stroke-linejoin: round;

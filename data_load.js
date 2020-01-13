@@ -32,8 +32,8 @@ var createViz = function () {
     //d["Country Of Birth"]
     //d[CriteriaToSee]
     var svgTree = d3.select("#tree").append("svg")
-        .attr("width", maxR*(8+5)) //+ paddingX*25)
-        .attr("height", maxR*(7+2.5))//+ paddingY*5);
+        .attr("width", maxR*(9)) 
+        .attr("height", maxR*(10))
 
     loadData(svgMap, svgTree, maxR);
 };
