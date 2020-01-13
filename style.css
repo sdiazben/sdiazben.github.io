@@ -1,0 +1,92 @@
+/* HTML STYLING */
+
+body {
+	background-color: #FFF;
+	font-family: 'Roboto' !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	align-content: center;
+	text-align: center;
+}
+#title{
+	width:90%;
+	margin: 0% 5%;
+}
+
+#container{
+	width : 100%;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#loading{
+	align-content: center;
+}
+
+#map{
+	width : 75% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#tree{
+	width: 25% !important;
+	padding: 0 !important;
+	margin: 0 !important;
+}
+
+#conclusions{
+	width : 90%;
+	margin: 0% 5% 1% 5%;
+	text-align: justify;
+}
+
+/* ALL BOUNDING LINES */
+
+path, line, .connectingLine, .legendCircle{
+	stroke: #ccc;
+	stroke-width: 1;
+	stroke-linejoin: round;
+	stroke-linecap: round;
+}
+
+.connectingLine{
+	stroke-width: 5 !important;
+}
+
+/* LEGENDS */
+.legendText{
+	font-size: 12;
+}
+
+.legendCircle{
+	fill : none;
+	stroke: #bbb;
+	stroke-dasharray: 3;
+}
+
+.states {
+	fill: lightgray;
+}
+
+
+path:hover {
+	fill-opacity: .7;
+}
+
+/* Style for Custom Tooltip */
+div.tooltip {
+	position: absolute;
+	text-align: center;
+	width: 60px;
+	height: 28px;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: white;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+}
+
+/* #map {float:left; display:inline}
+#tree {float:left; display:inline} */

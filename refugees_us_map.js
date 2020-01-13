@@ -1,8 +1,3 @@
-var ctx = {
-    w: 1100,
-    h: 500
-};
-
 
 
 var transformData = function (data, us_states_abb, us_coord) {
@@ -112,10 +107,10 @@ var createMap = function (svg, data) {
         .labelFormat(d3.format(".0f"))
         .scale(colorScale)
         .shapePadding(5)
-        .shapeWidth(50)
+        .shapeWidth(20)
         .shapeHeight(20)
         .labelOffset(12)
-        .title("Number of Arrivals");
+        .title("Number of arrivals");
 
     svg.append("g")
         .attr("transform", "translate(900, 200)")
@@ -127,6 +122,8 @@ var createMap = function (svg, data) {
     svg.selectAll('path')
         .data(us_states.features)
         .enter().append('path')
+        .attr("stroke-width", 1)
+        .style("stroke", "#ccc")
         .attr("class", "states")
         .attr("name", function (d) {
             return d.properties.NAME;
@@ -194,29 +191,5 @@ var createMap = function (svg, data) {
                 .style("opacity", 0);
         });
 
-
-};
-
-
-
-var createViz = function () {
-    var svg = d3.select("#map").append("svg")
-        .attr("width", ctx.w)
-        .attr("height", ctx.h);
-    loadData(svg);
-    window.onload = drawTree();
-};
-
-var loadData = function (svg) {
-    var promises = [
-        d3.csv("data/arrivals_by_destination_nationality_2017.csv"),
-        d3.json("data/us-states.json"),
-        d3.json("data/states_titlecase.json"),
-        d3.json("data/us-zip-code-latitude-and-longitude.json")
-    ];
-    Promise.all(promises).then(function (data) {
-        createMap(svg, data);
-    }).catch(function (error) {
-        console.log(error)
-    });
+d3.select("#loading").remove();
 };
