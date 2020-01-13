@@ -70,7 +70,7 @@ path, line, .connectingLine, .legendCircle{
 }
 
 
-path:hover {
+circle:hover {
 	fill-opacity: .7;
 }
 

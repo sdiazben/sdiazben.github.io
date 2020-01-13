@@ -141,22 +141,6 @@ var createMap = function (svg, data) {
                 return "rgb(213,222,217)";
             };
 
-        }).on("mouseover", function (d) {
-            if ("arrivals" in d.properties) {
-                div.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                div.text(d.properties.arrivals)
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
-            }
-        })
-
-        // fade out tooltip on mouse out               
-        .on("mouseout", function (d) {
-            div.transition()
-                .duration(500)
-                .style("opacity", 0)
         });
 
 
