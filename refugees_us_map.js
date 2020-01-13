@@ -1,5 +1,3 @@
-
-
 var transformData = function (data, us_states_abb, us_coord) {
     var placements = {};
     for (var i = 0; i < data.length; i++) {
@@ -94,15 +92,23 @@ var createMap = function (svg, data) {
         }
     }
 
+    cities.sort(function (a, b) {
+        var keyA = a.value,
+            keyB = b.value;
+        if (keyA < keyB) return 1;
+        if (keyA > keyB) return -1;
+        return 0;
+    });
+
     var div = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
-   
+
     var colorScale = d3.scaleQuantile()
         .domain(d3.range(min_arrivals, max_arrivals))
         .range(d3.schemeBlues[9]);
-    
+
     var colorLegend = d3.legendColor()
         .labelFormat(d3.format(".0f"))
         .scale(colorScale)
@@ -141,14 +147,15 @@ var createMap = function (svg, data) {
                 return "rgb(213,222,217)";
             };
 
-        }).on("mouseover", function (d) {
-            if ("arrivals" in d.properties) {
-                div.transition()
-                    .duration(200)
-                    .style("opacity", .9);
-                div.text(d.properties.arrivals)
-                    .style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
+        })
+        .on("mouseover", function (d) {
+            if (d.properties.arrivals > 0){
+            div.transition()
+                .duration(200)
+                .style("opacity", .9);
+            div.text(d.properties.NAME + ": " + d.properties.arrivals)
+                .style("left", (d3.event.pageX) + "px")
+                .style("top", (d3.event.pageY - 28) + "px");
             }
         })
 
@@ -156,14 +163,17 @@ var createMap = function (svg, data) {
         .on("mouseout", function (d) {
             div.transition()
                 .duration(500)
-                .style("opacity", 0)
-        });
+                .style("opacity", 0);
+        });  ;
 
 
-    svg.selectAll("circle")
+    var circles = svg.selectAll("circle")
         .data(cities)
         .enter()
         .append("circle")
+        .attr("class", function (d, i) {
+            return "cities " + d.name + " " + d.lat + " " + d.lon;
+        })
         .attr("cx", function (d) {
             return projection([d.lon, d.lat])[0];
         })
@@ -174,7 +184,9 @@ var createMap = function (svg, data) {
             return Math.sqrt(d.value);
         })
         .style("fill", "rgb(217,91,67)")
+
         .style("opacity", 0.85)
+
         .on("mouseover", function (d) {
             div.transition()
                 .duration(200)
@@ -189,7 +201,7 @@ var createMap = function (svg, data) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });
+        });  
 
-d3.select("#loading").remove();
+    d3.select("#loading").remove();
 };
