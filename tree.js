@@ -32,7 +32,7 @@ function createTree(svgContainer, data, maxR)
   var maxD = Math.max.apply(null,totals); //maximum number of "applicants" for legend
   var minD = Math.min.apply(null,totals.filter(x=>{if(x!=0){return x}})); //minimum number of "applicants" for legend
 
-  var color = d3.scaleOrdinal().domain(criteriaOptions).range(d3.schemeGreens[9])
+  var color = d3.scaleOrdinal().domain(criteriaOptions).range(["#4e79a7","#f28e2c","#e15759","#76b7b2","#59a14f","#edc949","#af7aa1","#ff9da7","#9c755f","#bab0ab"])
   var newScale = d3.scaleLinear().domain([minD, maxD]).range([minR, maxR]);
 
   var locations = {
@@ -125,9 +125,9 @@ function createTree(svgContainer, data, maxR)
       .attr("y2", maxR*2 + paddingY*2)
       .attr("class", "connectingLine");
   svgContainer.append("line")
-      .attr("x1", maxR*6 + paddingX*4.5)
+      .attr("x1", maxR*6 + paddingX*4)
       .attr("y1", maxR*2 + paddingY*2)
-      .attr("x2", maxR*6 + paddingX*4.5)
+      .attr("x2", maxR*6 + paddingX*4)
       .attr("y2", maxR*3 + paddingY*3)
       .attr("class", "connectingLine");
 
@@ -135,14 +135,14 @@ function createTree(svgContainer, data, maxR)
   svgContainer.append("line")
       .attr("x1", maxR*2 + paddingX*.5)
       .attr("y1", maxR*3 + paddingY*3)
-      .attr("x2", maxR*6 + paddingX*4.5)
+      .attr("x2", maxR*6 + paddingX*4)
       .attr("y2", maxR*3 + paddingY*3)
       .attr("class", "connectingLine");
   svgContainer.append("line")
       .attr("x1", maxR*4 + paddingX*2.5)
       .attr("y1", maxR*3 + paddingY*3)
       .attr("x2", maxR*4 + paddingX*2.5)
-      .attr("y2", maxR*5 + paddingY*5)
+      .attr("y2", locations["Children"][1])
       .attr("class", "connectingLine");
 
   // -----------------------------------------
