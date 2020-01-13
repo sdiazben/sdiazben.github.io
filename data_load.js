@@ -24,8 +24,8 @@ var createViz = function () {
     //d["Year Of Entry"]
     //d["Country Of Birth"]
     var svgMap = d3.select("#map").append("svg")//.attr("viewbox","0 0 750 375")
-        .attr("width", 1100)
-        .attr("height", 500);
+        .attr("width", 750)
+        .attr("height",500);
 
     var maxR = 50;
     //d["Year Of Entry"]

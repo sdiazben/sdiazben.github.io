@@ -112,17 +112,18 @@ var createMap = function (svg, data) {
     var colorLegend = d3.legendColor()
         .labelFormat(d3.format(".0f"))
         .scale(colorScale)
-        .shapePadding(5)
-        .shapeWidth(20)
+        .shapePadding(30)
+        .shapeWidth(50)
         .shapeHeight(20)
-        .labelOffset(12)
-        .title("Number of arrivals");
+        .labelWrap(12)
+        .title("Number of arrivals")
+        .orient('horizontal');
 
     svg.append("g")
-        .attr("transform", "translate(900, 200)")
+        .attr("transform", "translate(10, 400)")
         .call(colorLegend);
 
-    var projection = d3.geoAlbersUsa();
+    var projection = d3.geoAlbersUsa().scale(800).translate([350,180]);
     var path = d3.geoPath()
         .projection(projection);
     svg.selectAll('path')
@@ -181,7 +182,7 @@ var createMap = function (svg, data) {
             return projection([d.lon, d.lat])[1];
         })
         .attr("r", function (d) {
-            return Math.sqrt(d.value);
+            return 0.8*Math.sqrt(d.value);
         })
         .style("fill", "rgb(217,91,67)")
 
