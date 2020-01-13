@@ -1,4 +1,5 @@
-function drawTree(){
+function drawTree()
+{
 // -----------------------------------------
 //VARIABLES
 // -----------------------------------------
@@ -27,31 +28,88 @@ var total = d3.csv(source, function(d){
       return d
   ;}).then(function(d) {
 
-  // TOTAL ROWS
+  // Total rows
   numRows = d.length;
   
-    //MALE PARENT
+    //Male parent
     var parentMale = d3.csv(source, function(d) {
-      if(//d["Year Of Entry"]== y &&
-        //d["Country Of Birth"] == c && 
-        d["Relationship"] == "Parent/Guardian" && //"Parent / Stepparent / foster parent / guardian" && //NECESITAMOS CAMBIARLO A "PARENT" "IN-LAW" "APPLICANT" "PARTNER" "CHILDREN" Y "OTHER"
+      if(d["Relationship"] == "Parent/Guardian" &&
         d["Gender"] == "Male"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numParentMale = d.length;
+      //amount of entries
+      numParentMale = data.length;
       console.log("nr "+numRows);
-      console.log("npm "+numParentMale);
+      console.log("npm "+numParentMale);  
 
       cx = maxR;
       cy = maxR + paddingY;
 
-      svgContainer.append("circle")
-      .attr("cx", cx)
-      .attr("cy", cy)
-      .attr("r", maxR*2*(numParentMale/numRows))
-      .style("fill","blue")
+      //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numParentMale/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")   
+      //.style("opacity", 0.7)
+
+      //Legend
+
+      svgContainer.append("text")
+      .attr("x", maxR*9.5)
+      .attr("y", paddingY - 9)
+      .text("Education - English level")
+      .style("font-family",fontF)
+
+      var pie_legend = svgContainer.selectAll(".legend")
+      .data(entries)
+      .enter().append("g")
+      .attr("transform", function(d,i){
+        return "translate(" + (maxR*9.5) + "," + ((i+1) * 15 + 20) + ")";
+      })
+      .attr("class", "legend");  
+
+      pie_legend.append("rect")
+      .attr("width", 10)
+      .attr("height", 10)
+      .attr("fill", function(d, i) {
+        return color(i);
+      });
+
+      pie_legend.append("text")
+      .text(function(d){
+        return d.data.key; 
+      })
+      .style("font-family",fontF)
+      .style("font-size", 12)
+      .attr("y", 10)
+      .attr("x", 11);
+  
     });
 
     //FEMALE PARENT
@@ -62,21 +120,46 @@ var total = d3.csv(source, function(d){
         d["Gender"] == "Female"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numParentFemale = d.length;
+      numParentFemale = data.length;
       console.log("nr "+numRows);
       console.log("npf "+numParentFemale);
 
-      cx = maxR;
-      cx += maxR*2 + paddingX;
+      cx = maxR*3 + paddingX;
       cy = maxR + paddingY;
 
-      svgContainer.append("circle")
-        .attr("cx", cx)
-        .attr("cy", cy)
-        .attr("r", maxR*2*(numParentFemale/numRows))
-        .style("fill","blue");
+      //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numParentFemale/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")   
     });  
 
     //MALE IN-LAW
@@ -87,9 +170,9 @@ var total = d3.csv(source, function(d){
         d["Gender"] == "Male"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numinlawMale = d.length;
+      numinlawMale = data.length;
       console.log("nr "+numRows);
       console.log("nim "+numinlawMale);
 
@@ -98,11 +181,37 @@ var total = d3.csv(source, function(d){
       cx += maxR*2 + paddingX*3
       cy = maxR + paddingY;
 
-      svgContainer.append("circle")
-      .attr("cx", cx)
-      .attr("cy", cy)
-      .attr("r", maxR*2*(numinlawMale/numRows))
-      .style("fill","blue");
+      //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numinlawMale/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")
     }); 
 
     //FEMALE IN-LAW
@@ -113,9 +222,9 @@ var total = d3.csv(source, function(d){
         d["Gender"] == "Female"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numinlawFemale = d.length;
+      numinlawFemale = data.length;
       console.log("nr "+numRows);
       console.log("nif "+numinlawFemale );
 
@@ -125,11 +234,37 @@ var total = d3.csv(source, function(d){
       cx += maxR*2 + paddingX;
       cy = maxR + paddingY;
 
-      svgContainer.append("circle")
-      .attr("cx", cx)
-      .attr("cy", cy)
-      .attr("r", maxR*2*(numinlawFemale/numRows))
-      .style("fill","blue");
+      //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numinlawFemale/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")
     }); 
 
     //APPLICANT
@@ -139,9 +274,9 @@ var total = d3.csv(source, function(d){
         d["Relationship"] == "Self"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numSelf = d.length;
+      numSelf = data.length;
       console.log("nr "+numRows);
       console.log("s "+numSelf);
 
@@ -149,11 +284,37 @@ var total = d3.csv(source, function(d){
       cy = maxR + paddingY;
       cy += maxR*2 + paddingY*2 
 
-      svgContainer.append("circle")
-      .attr("cx", cx)
-      .attr("cy", cy)
-      .attr("r", maxR*2*(numSelf/numRows))
-      .style("fill","blue");
+      //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numSelf/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")
     }); 
 
     //PARTNER
@@ -163,9 +324,9 @@ var total = d3.csv(source, function(d){
         d["Relationship"] == "Spouse"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numPartner = d.length;
+      numPartner = data.length;
       console.log("nr "+numRows);
       console.log("np "+numPartner);
 
@@ -174,11 +335,37 @@ var total = d3.csv(source, function(d){
       cy += maxR*2 + paddingY*2;
       cx += maxR*4 + paddingX*3.5;
 
-      svgContainer.append("circle")
-      .attr("cx", cx)
-      .attr("cy", cy)
-      .attr("r", maxR*2*(numPartner/numRows))
-      .style("fill","blue");
+      //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numPartner/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")
     });
 
     //CHILDREN
@@ -188,9 +375,9 @@ var total = d3.csv(source, function(d){
         d["Relationship"] == "Children"){
           return d
           };
-      }).then(function(d) {
+      }).then(function(data) {
 
-      numChildren = d.length;
+      numChildren = data.length;
       console.log("nr "+numRows);
       console.log("nc "+numChildren);
 
@@ -199,11 +386,37 @@ var total = d3.csv(source, function(d){
       cy += maxR*2 + paddingY*2;
       cy += maxR*2 + paddingY*2;
 
-      svgContainer.append("circle")
-      .attr("cx", cx)
-      .attr("cy", cy)
-      .attr("r", maxR*2*(numChildren/numRows))
-      .style("fill","blue");
+     //group and count per attribute (example: english level)
+      var count = d3.nest().key(function(d) { return d["Speak English Now"]; })
+                            .rollup(function(v) { return v.length; })
+                            .object(data);
+
+      console.log(JSON.stringify(count));
+
+      //pie chart
+      var color = d3.scaleOrdinal().domain(count).range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+      var pie = d3.pie()
+      .value(function(d) {return d.value; })
+      var entries = pie(d3.entries(count))
+
+      
+
+      var pie = svgContainer.append("svg")
+                .attr("width", cx*2)
+                .attr("height", cy*2)
+                .append("g")
+                .attr("transform", "translate(" + cx + "," + cy + ")");
+
+      pie.selectAll('whatever')
+      .data(entries)
+      .enter()
+      .append('path')
+      .attr('d', d3.arc()
+        .innerRadius(0)
+        .outerRadius(maxR*3*(numChildren/numRows)))
+      .attr('fill', function(d){ return(color(d.data.key)) })
+      .attr("stroke", "black")
+      .style("stroke-width", "2px")
 
     });
 });
@@ -219,7 +432,7 @@ var minD = 5;
 // -----------------------------------------
 var svgContainer = d3.select(target)
   .append("svg")
-  .attr("width", maxR*8 + paddingX*5)
+  .attr("width", maxR*8 + paddingX*25)
   .attr("height", maxR*7 + paddingY*5);
 
 //WE DRAW THE LINES
@@ -337,7 +550,7 @@ svgContainer.append("text")
 
 svgContainer.append("text")
   .attr("x", maxR*4 + paddingX*2.5 - 40)
-  .attr("y", maxR*6 + paddingY*5 - 9)
+  .attr("y", maxR*6.5 + paddingY*5 - 9)
   .text("CHILDREN")
   .style("font-family",fontF)
 
@@ -429,13 +642,13 @@ svgContainer.append("circle")
 svgContainer.append("text")
   .attr("x", maxR - 9)
   .attr("y", maxR*6 + paddingY*5)
-  .text(maxD)
+  .text(maxD+"%")
   .style("font-family",fontF)
   .style("font-size",10)
 svgContainer.append("text")
   .attr("x", maxR - 9)
   .attr("y", maxR*7 + paddingY*5 - minR)
-  .text("<="+minD)
+  .text("<="+minD+"%")
   .style("font-family",fontF)
   .style("font-size",10)
 }
