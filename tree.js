@@ -1,3 +1,6 @@
+var allCriteria = ["Ethnic Origin","Speak English Now","num_months__health_costs_covered_organism_past_12mo","Earnings_per_person_last_12_months","type_aid","Employment Before Entry","Work Status"]
+var selectedCriteria = "";
+
 function createTree(svgContainer, data, maxR)
 {
   // -----------------------------------------
@@ -248,6 +251,11 @@ function drawPie(svgContainer,cx,cy,radius,data,colorScheme){
             .attr("height", cy*2)
             .append("g")
             .attr("transform", "translate(" + cx + "," + cy + ")");
+  
+  var div = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip2")
+        .style("opacity", 0);
 
   pie.selectAll('whatever')
   .data(slices)
@@ -258,10 +266,18 @@ function drawPie(svgContainer,cx,cy,radius,data,colorScheme){
     .outerRadius(radius))
   .attr('fill', function(d){return colorScheme(d.data.key)} )
   .attr("stroke", "black")
-  .style("stroke-width", "2px")   
+  .style("stroke-width", "2px")
+  .on("mouseover", function(d){
+    div.transition().duration(200).style("opacity", .9);
+    div.text(d.value)
+      .style("left", (d3.event.pageX+10) + "px")
+      .style("top", (d3.event.pageY) + "px");
+  })
+  .on("mouseout", function(d){
+    div.transition().duration(500).style("opacity", 0);
+  });   
   
 }
-
 
 function textSize(text) {
   var container = d3.select('#conclusions').append("svg")
@@ -271,3 +287,30 @@ function textSize(text) {
   return { width: size.width, height: size.height };
 }
 
+// -----------------------------------------
+// HOVER INTERACTION
+// -----------------------------------------
+
+
+/*
+// -----------------------------------------
+// SCROLLING INTERACTION
+// -----------------------------------------
+// Initial state
+var scrollPos = 0;
+// adding scroll event
+
+window.addEventListener('scroll', function(){
+  // detects new state and compares it with the new one
+  if ((document.body.getBoundingClientRect()).top > scrollPos)
+    console.log("UP");
+  else
+    console.log("DOWN");
+  // saves the new position for iteration.
+  scrollPos = (document.body.getBoundingClientRect()).top;
+});
+
+
+
+
+*/

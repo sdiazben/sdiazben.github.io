@@ -34,6 +34,12 @@ var createViz = function () {
     var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
         .attr("height", maxR*(10))
+        .attr("id","treeSVG")
 
     loadData(svgMap, svgTree, maxR);
 };
+
+var div = d3.select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);

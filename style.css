@@ -24,8 +24,16 @@ body {
 	position: relative;
 }
 
+.placeholder{
+	align-content: left;
+	text-align: left;
+	width: 10%;
+	position: absolute;
+	left: 0;
+}
+
 #mapTitle, #map{
-	width: 50%;
+	width: 45%;
 	padding: 0 1% !important;
 	float: left;
 	display: table-cell;
@@ -33,7 +41,7 @@ body {
 }
 
 #treeTitle, #tree{
-	width: 50%;
+	width: 45%;
 	padding: 0 1% !important;
 	display: table-cell;
 }
@@ -100,6 +108,19 @@ div.tooltip {
 	text-align: center;
 	width: 100px;
 	height: 28px;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: white;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+}
+
+div.tooltip2 {
+	position: absolute;
+	text-align: center;
+	width: 15px;
+	height: 15px;
 	padding: 2px;
 	font: 12px sans-serif;
 	background: white;
