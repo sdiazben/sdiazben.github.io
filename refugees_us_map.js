@@ -6,6 +6,7 @@ function transformData(data, us_states_abb, us_coord) {
         var state = line["Placement State"];
         var city = line["Placement City"];
         var value = parseInt(line["Value"]);
+        var year = parseInt(line["Year"]);
         var state_abb = "";
         for (var j = 0; j < us_states_abb.length; j++) {
             var current = us_states_abb[j];
@@ -29,21 +30,24 @@ function transformData(data, us_states_abb, us_coord) {
             }
         }
 
-        if (!(nationality in placements))
-            placements[nationality] = {};
-        if (!(state in placements[nationality]))
-            placements[nationality][state] = {};
-        if (!(city in placements[nationality][state]))
-            placements[nationality][state][city] = {};
-        if (!("value" in placements[nationality][state][city]))
-            placements[nationality][state][city]["value"] = 0;
+        if(!(year in placements)){
+            placements[year] =  {};
+        }
+        if (!(nationality in placements[year]))
+            placements[year][nationality] = {};
+        if (!(state in placements[year][nationality]))
+            placements[year][nationality][state] = {};
+        if (!(city in placements[year][nationality][state]))
+            placements[year][nationality][state][city] = {};
+        if (!("value" in placements[year][nationality][state][city]))
+            placements[year][nationality][state][city]["value"] = 0;
         if (longitude != null) {
-            if (!("longitude" in placements[nationality][state][city])) {
-                placements[nationality][state][city]["longitude"] = longitude;
-                placements[nationality][state][city]["latitude"] = latitude;
+            if (!("longitude" in placements[year][nationality][state][city])) {
+                placements[year][nationality][state][city]["longitude"] = longitude;
+                placements[year][nationality][state][city]["latitude"] = latitude;
             }
         }
-        placements[nationality][state][city]["value"] += value;
+        placements[year][nationality][state][city]["value"] += value;
     }
     return placements;
 };
@@ -51,6 +55,7 @@ function transformData(data, us_states_abb, us_coord) {
 
 function createMap(svg, data) {
     var nationality = "Bhutan"; // We will change that later
+    var year = 2017;
     var us_states = data[1];
     var us_states_abb = data[2];
     var us_coord = data[3];
@@ -60,11 +65,11 @@ function createMap(svg, data) {
     var max_arrivals = Number.MIN_VALUE;
 
     var cities = [];
-    for (let state in arrivals[nationality]) {
+    for (let state in arrivals[year][nationality]) {
         var value = 0;
 
-        for (let city in arrivals[nationality][state]) {
-            current = arrivals[nationality][state][city];
+        for (let city in arrivals[year][nationality][state]) {
+            current = arrivals[year][nationality][state][city];
             value += current["value"];
             if ("longitude" in current) {
                 cities.push({
