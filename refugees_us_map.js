@@ -233,7 +233,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
 
 function drawCities(circles, projection, div) {
     circles.transition()
-        .duration(500)
+        .duration(1000)
         .attr("class", function (d, i) {
             return "cities " + d.name + " " + d.lat + " " + d.lon;
         })
