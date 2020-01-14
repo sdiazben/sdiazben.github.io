@@ -5,7 +5,7 @@
 		<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto'>
 		<link rel='stylesheet' href='style.css'>
 		<meta charset="UTF-8">
-		<title>Refugee integration and resettlement in the United States between 2011 and 2017</title>
+		<title>Refugee integration and resettlement in the US (2011-2017)</title>
 		<script type="text/javascript" src="libraries/d3.v5.min.js"></script>
 		<script type="text/javascript" src="data_load.js"></script>
 		<script type="text/javascript" src="refugees_us_map.js"></script>
@@ -16,20 +16,7 @@
 
 	<body onload="createViz();">
 		<div id="title">
-			Refugee integration and resettlement in the United States between 2011 and 2017
-		</div>
-
-		<div class="slidecontainer">
-			<input type="range" min="2011" max="2017" value="2011" list="tickmarks" class="slider" id="myRange">
-			<div class="sliderticks">
-				<p>2011</p>
-				<p>2012</p>
-				<p>2013</p>
-				<p>2014</p>
-				<p>2015</p>
-				<p>2016</p>
-				<p>2017</p>
-			  </div>
+			Refugee integration and resettlement in the US (2011-2017)
 		</div>
 		<div id="subTitles">
 			<div class="subTitle" id="mapTitle">MAP TITLE</div>
@@ -37,7 +24,7 @@
 		</div>
 		<div class="placeholder">
 				<form>
-					Country:<br />
+					Top-10 countries:<br />
 					<input type="radio" name="Country" value="Afghanistan" checked>Afghanistan<br />
 					<input type="radio" name="Country" value="Bhutan">Bhutan<br />
 					<input type="radio" name="Country" value="Burma">Burma<br />
@@ -48,6 +35,8 @@
 					<input type="radio" name="Country" value="Ukraine">Ukraine<br />
 					<input type="radio" name="Country" value="Somalia">Somalia<br />
 					<input type="radio" name="Country" value="Syria">Syria<br />
+					<input type="radio" name="Country" value="All">Group top-10
+					<br />
 					<br />
 					Criteria<br />
 					<input type="radio" name="CritiriaCategory" value="Health">Health<br />
@@ -62,6 +51,18 @@
 				<div id="loading"><img src="images/loading.gif" width="100" height="100" /></div>
 			</div>
 			<div id="tree"></div>
+		</div>
+		<div class="slidecontainer">
+			<input type="range" min="2011" max="2017" value="2017" list="tickmarks" class="slider" id="myRange">
+			<div class="sliderticks">
+				<p>2011</p>
+				<p>2012</p>
+				<p>2013</p>
+				<p>2014</p>
+				<p>2015</p>
+				<p>2016</p>
+				<p>2017</p>
+			  </div>
 		</div>
 		<div id="conclusions">
 			<p1>The map shows the amount of refugees that were settled from Bhutan in 2017 in different states and towns
