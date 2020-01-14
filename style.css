@@ -1,4 +1,4 @@
-/* HTML STYLING */
+/* HTML STYLING YAAAAAAAAAAA*/
 
 body {
 	background-color: #FFF;
@@ -10,12 +10,32 @@ body {
 }
 #title{
 	width:90%;
-	margin: 1% 5%;
+	margin: 1% 5% 5% 5%;
+	font-size: 50;
 }
 
-#container {
-	width: 100%;
-	display: table-row;
+.subTitle{
+	font-size: 25;
+}
+
+#subTitles, #container{
+	width: 90%;
+	margin: 2% 5%;
+	position: relative;
+}
+
+#mapTitle, #map{
+	width: 50%;
+	padding: 0 1% !important;
+	float: left;
+	display: table-cell;
+	position: relative;
+}
+
+#treeTitle, #tree{
+	width: 50%;
+	padding: 0 1% !important;
+	display: table-cell;
 }
 
 #loading {
@@ -27,18 +47,6 @@ body {
 	left:50%;
 
 	margin: -50px 0 0 -50px;
-}
-
-#map {
-	padding: 0 1% !important;
-	float: left;
-	display: table-cell;
-	position: relative;
-}
-
-#tree {
-	padding: 0 1% !important;
-	display: table-cell;
 }
 
 #conclusions{

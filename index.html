@@ -6,7 +6,7 @@
 		<link rel='stylesheet' href='style.css'>
 		<meta charset="UTF-8">
 		<title>Refugee integration and resettlement in the United States between  2011 and 2017</title>
-		<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+		<script type="text/javascript" src="libraries/d3.v5.min.js"></script>
 		<script type="text/javascript" src="data_load.js"></script>
 		<script type="text/javascript" src="refugees_us_map.js"></script>
 		<script type="text/javascript" src="tree.js"></script>
@@ -15,16 +15,18 @@
 
 	<body onload="createViz();">
 		<div id="title">
-			<h1>Refugee integration and resettlement in the United States between 2011 and 2017</h1>
+			Refugee integration and resettlement in the United States between 2011 and 2017
+		</div>
+		<div id="subTitles">
+			<div class="subTitle" id="mapTitle">MAP TITLE</div>
+			<div class="subTitle" id="graphTitle">TREE TITLE</div>
 		</div>
 		<div id="container">
-			<div id="map">
-				<div id="loading"><img src="images/loading.gif" width="100" height="100" /></div>
-			</div>
+			<div id="map"><div id="loading"><img src="images/loading.gif" width="100" height="100" /></div></div>
 			<div id="tree"></div>
 		</div>
 		<div id="conclusions">
-			<p1>The map shows the amount of refugees that were settled from Bhutan in 2017 in different states and towns of the USA. Interaction will be added later in order to showcase more countries and traverse differentyears. On the other hand, the tree's nodes' size shows the distribution of the data entries within the household, i.e. how many rows refer to the applicant and how many to his/her family members. Said nodes are also each a pie chart that represents the integration variables that would later be chosen by the user. For example, in this case if the user were to chose education a variable that could be chosen would be the level of english, whose level distribution is shown throughout the family members in all the data.</p1>
+			<p1>The map shows the amount of refugees that were settled from Bhutan in 2017 in different states and towns of the USA. Interaction will be added later in order to showcase more countries and traverse different years. On the other hand, the tree's nodes' size shows the distribution of the data entries within the household, i.e. how many rows refer to the applicant and how many to his/her family members. Said nodes are also each a pie chart that represents the integration variables that would later be chosen by the user. For example, in this case if the user were to chose education a variable that could be chosen would be the level of english, whose level distribution is shown throughout the family members in all the data.</p1>
 		</div>
 	</body>
 
