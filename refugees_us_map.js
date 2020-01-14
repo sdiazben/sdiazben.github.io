@@ -112,18 +112,35 @@ var createMap = function (svg, data) {
     var colorLegend = d3.legendColor()
         .labelFormat(d3.format(".0f"))
         .scale(colorScale)
-        .shapePadding(30)
+        .shapePadding(70)
         .shapeWidth(20)
         .shapeHeight(20)
-        .labelWrap(12)
         .title("Number of arrivals")
         .orient('horizontal');
 
-    svg.append("g")
-        .attr("transform", "translate(10, 400)")
+    var legend = svg.append("g")
+        .attr("transform", "translate(-10, 426)")
         .call(colorLegend);
 
-    var projection = d3.geoAlbersUsa().scale(800).translate([350,180]);
+    // Change position of each cell in the legend
+    legend.selectAll('.cell')
+    .each(function(d,i) {
+      d3.select(this) 
+      .attr("transform", "translate("+i%5*90+","+Math.floor(i/5)*30+")");
+    });
+
+    //change the position and attributes of the text in each cell
+    legend.selectAll('.label')
+        .attr("class", "legendText")
+        .attr("style", "text-anchor: left")
+        // .attr("font-size", "12")
+        .attr("transform", "translate(25,15)");
+
+    //change attributes of title of legend
+    legend.select('.legendTitle')
+    .attr("transform", "translate(10, 0)");
+
+    var projection = d3.geoAlbersUsa().scale(800).translate([350, 180]);
     var path = d3.geoPath()
         .projection(projection);
     svg.selectAll('path')
@@ -150,13 +167,13 @@ var createMap = function (svg, data) {
 
         })
         .on("mouseover", function (d) {
-            if (d.properties.arrivals > 0){
-            div.transition()
-                .duration(200)
-                .style("opacity", .9);
-            div.text(d.properties.NAME + ": " + d.properties.arrivals)
-                .style("left", (d3.event.pageX) + "px")
-                .style("top", (d3.event.pageY - 28) + "px");
+            if (d.properties.arrivals > 0) {
+                div.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                div.text(d.properties.NAME + ": " + d.properties.arrivals)
+                    .style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
             }
         })
 
@@ -165,7 +182,7 @@ var createMap = function (svg, data) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });  ;
+        });;
 
 
     var circles = svg.selectAll("circle")
@@ -182,7 +199,7 @@ var createMap = function (svg, data) {
             return projection([d.lon, d.lat])[1];
         })
         .attr("r", function (d) {
-            return 0.8*Math.sqrt(d.value);
+            return 0.8 * Math.sqrt(d.value);
         })
         .style("fill", "rgb(217,91,67)")
 
@@ -202,7 +219,7 @@ var createMap = function (svg, data) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
-        });  
+        });
 
     d3.select("#loading").remove();
 };
