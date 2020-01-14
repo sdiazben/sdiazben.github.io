@@ -113,7 +113,7 @@ var createMap = function (svg, data) {
         .labelFormat(d3.format(".0f"))
         .scale(colorScale)
         .shapePadding(30)
-        .shapeWidth(50)
+        .shapeWidth(20)
         .shapeHeight(20)
         .labelWrap(12)
         .title("Number of arrivals")
