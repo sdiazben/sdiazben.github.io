@@ -100,9 +100,20 @@ function getCitiesData(arrivals, year, nationality, us_states) {
 };
 
 function createMap(svg, data) {
-    var year = 2017;
+    var slider = document.getElementById("myRange");
+    var year = slider.value;
 
-    var nationality = "Bhutan"; // We will change that later 
+    var radio = document.getElementsByName('Country');
+    var nationality = "";
+    for (var i = 0, length = radio.length; i < length; i++) {
+        if (radio[i].checked) {
+            // do whatever you want with the checked radio
+            nationality = radio[i].value;
+
+            // only one radio can be logically checked, don't check the rest
+            break;
+        }
+    };
     var us_states = data[1];
     var us_states_abb = data[2];
     var us_coord = data[3];
@@ -121,36 +132,8 @@ function createMap(svg, data) {
         .domain(d3.range(min_arrivals, max_arrivals))
         .range(d3.schemeBlues[9]);
 
-    var colorLegend = d3.legendColor()
-        .labelFormat(d3.format(".0f"))
-        .scale(colorScale)
-        .shapePadding(70)
-        .shapeWidth(20)
-        .shapeHeight(20)
-        .title("Number of arrivals")
-        .orient('horizontal');
 
-    var legend = svg.append("g")
-        .attr("transform", "translate(-10, 426)")
-        .call(colorLegend);
-
-    // Change position of each cell in the legend
-    legend.selectAll('.cell')
-        .each(function (d, i) {
-            d3.select(this)
-                .attr("transform", "translate(" + i % 5 * 90 + "," + Math.floor(i / 5) * 30 + ")");
-        });
-
-    //change the position and attributes of the text in each cell
-    legend.selectAll('.label')
-        .attr("class", "legendText")
-        .attr("style", "text-anchor: left")
-        // .attr("font-size", "12")
-        .attr("transform", "translate(25,15)");
-
-    //change attributes of title of legend
-    legend.select('.legendTitle')
-        .attr("transform", "translate(10, 0)");
+    var legend = drawLegend(colorScale, svg);
 
     var projection = d3.geoAlbersUsa().scale(800).translate([350, 180]);
     var path = d3.geoPath()
@@ -206,29 +189,65 @@ function createMap(svg, data) {
 
     d3.select("#loading").remove();
 
-    updateData(arrivals, year, nationality, us_states, circles, projection, div);
+    updateData(arrivals, year, nationality, us_states, circles, projection, div, svg, legend, states,path);
 };
 
-function updateData(arrivals, year, nationality, us_states, circles, projection, div) {
+
+function drawLegend(colorScale, svg) {
+    var legend = svg.append("g")
+        .attr("transform", "translate(-10, 426)");
+
+    var colorLegend = d3.legendColor()
+        .labelFormat(d3.format(".0f"))
+        .scale(colorScale)
+        .shapePadding(70)
+        .shapeWidth(20)
+        .shapeHeight(20)
+        .title("Number of arrivals")
+        .orient('horizontal');
+
+
+    legend.call(colorLegend);
+
+    // Change position of each cell in the legend
+    legend.selectAll('.cell')
+        .each(function (d, i) {
+            d3.select(this)
+                .attr("transform", "translate(" + i % 5 * 90 + "," + Math.floor(i / 5) * 30 + ")");
+        });
+
+    //change the position and attributes of the text in each cell
+    legend.selectAll('.label')
+        .attr("class", "legendText")
+        .attr("style", "text-anchor: left")
+        // .attr("font-size", "12")
+        .attr("transform", "translate(25,15)");
+
+    //change attributes of title of legend
+    legend.select('.legendTitle')
+        .attr("transform", "translate(10, 0)");
+
+    return legend;
+};
+
+function updateData(arrivals, year, nationality, us_states, circles, projection, div, svg, legend, states,path) {
     var slider = document.getElementById("myRange");
-    var radio = 
+    var radio = document.getElementsByName('Country');
 
     slider.oninput = function () {
         year = this.value;
-        var citiesData = getCitiesData(arrivals, year, nationality, us_states);
-        var cities = citiesData[0];
-        var min_arrivals = citiesData[1];
-        var max_arrivals = citiesData[2];
-        
-        circles.data(cities);
-
-        circles.exit().remove(); //remove unneeded circles
-        circles.enter().append("circle")
-            .attr("r", 0); //create any new circles needed
-        drawCities(circles, projection, div);
-
+        legend = updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path);
 
     };
+
+    for (var i = 0, len = radio.length; i < len; i++) {
+        radio[i].onclick = function () { // assign onclick handler function to each
+            // put clicked radio button's value in total field
+            nationality = this.value;
+            legend = updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path)
+        };
+
+    }
 
 };
 
@@ -265,4 +284,53 @@ function drawCities(circles, projection, div) {
                 .duration(500)
                 .style("opacity", 0);
         });
-}
+};
+
+function updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path) {
+    var citiesData = getCitiesData(arrivals, year, nationality, us_states);
+    var cities = citiesData[0];
+    var min_arrivals = citiesData[1];
+    var max_arrivals = citiesData[2];
+
+    //UPDATING LEGEND////////////////////////////////////////
+    var colorScale = d3.scaleQuantile()
+        .domain(d3.range(min_arrivals, max_arrivals))
+        .range(d3.schemeBlues[9]);
+
+    legend.remove();
+    legend = drawLegend(colorScale, svg);
+
+    ////////////////////////////////////////////////////////
+
+    //UPDATIN CIRCLES///////////////////////////////////////
+    circles.data(cities);
+
+    circles.exit().remove(); //remove unneeded circles
+    circles.enter().append("circle")
+        .attr("r", 0); //create any new circles needed
+    drawCities(circles, projection, div);
+    ////////////////////////////////////////////////////////
+
+    //UPDATIN STATES////////////////////////////////////////
+    states.data(us_states.features);
+    states.exit().remove();
+    
+    states.transition()
+        .duration(0)
+        .style("fill", function (d) {
+
+            // Get data value
+            var value = d.properties.arrivals;
+            if (value) {
+                //If value exists…
+                return colorScale(value);
+            } else {
+                //If value is undefined…
+                return "rgb(213,222,217)";
+            };
+            ////////////////////////////////////////////////////////
+            
+        });
+
+        return legend;
+};
