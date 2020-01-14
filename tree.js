@@ -1,15 +1,39 @@
-var allCriteria = ["Ethnic Origin","Speak English Now","num_months__health_costs_covered_organism_past_12mo","Earnings_per_person_last_12_months","type_aid","Employment Before Entry","Work Status"]
-var selectedCriteria = "";
+var allCriteria = {
+  "Health":["Health costs covered by gov.org. (mo. in past 12 mo.)","Medical expenses covered by","Bad health 6 mo. or more preventing work","Usual medical care source"],
+  "Financial":["Earnings ($US) past 12 months","Goverment aid received","Received food stamps"],
+  "Residency":["Applied for permanent residency year","Planning immigration status change"],
+  "Education":["Highest degree before entry","Years of schooling before entry","Currently enrolled in english courses","Level of english now","Participate in children education"],
+  "Employment":["Employment before entry","Work status","Time for first employement in the US (years)","Attended university or training past 12 months","Job training duration (weeks)","Work hours per week","Works more than one job since last week","Job business kind or industry"]
+}
 
-function createTree(svgContainer, data, maxR, refugeeCriteria)
+function createTree(svgContainer, dataSource, maxR, refugeeCriteria)
 {
+  console.log(refugeeCriteria)
   // -----------------------------------------
   // CRITERIA
   // -----------------------------------------
-  var treeTitle = "Education - English level"
-  selectedCriteria =  refugeeCriteria
-  var userSelections={"Country":"Bhutan","Year":"2011"};
+  var slider = document.getElementById("myRange");
+  switch(slider.value){
+    case "2011":
+      year = "2011 or earlier"
+      break;
+    case "2015":
+    case "2016":
+    case "2017":
+      year = "2015 or after"
+      break;
+    default:
+      year = slider.value;
+      break;
+  }
 
+  var radioCountry = document.getElementsByName('Country');
+  for (var i=0; i<radioCountry.length; i++){if (radioCountry[i].checked) { var nationality = radioCountry[i].value;break;}}
+
+  var radioCriteria = document.getElementsByName('CriteriaCategory');
+  for (var i=0; i<radioCriteria.length; i++){if (radioCriteria[i].checked) { var criteriaCategory = radioCriteria[i].value;break;}}
+
+  var treeTitle = "Education - English level" //TO-DO
   // -----------------------------------------
   //VARIABLES
   // -----------------------------------------
@@ -17,17 +41,25 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   var minR = 15; //minimum radius
   var paddingX = maxR/5
   var paddingY = maxR/2
-  var relation = ["Parent/Guardian","In-law","Self","Spouse","Children"]
+  var relation = ["Parent / Stepparent / foster parent / guardian","Father-in-law / Mother-in-law","Self","Spouse (wife/husband)","Child / stepchild / foster child / ward"]
   var gender = ["Male","Female"]
 
+
+  //REDEFINE DATA = DATASOURCE
+  if(nationality != "All"){
+    var data = dataSource.filter(x=>x["Country Of Birth"]==nationality&&x["Year Of Entry"]==year)
+  }else{
+    var data = dataSource.filter(x=>x["Year Of Entry"]==year)
+  }
+
   var numRows = data.length;
-  var numParentMale = data.map(x=>{if(x["Relationship"]==relation[0]&&x["Gender"]==gender[0]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
-  var numParentFemale = data.map(x=>{if(x["Relationship"]==relation[0]&&x["Gender"]==gender[1]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
-  var numinlawMale = data.map(x=>{if(x["Relationship"]==relation[1]&&x["Gender"]==gender[0]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
-  var numinlawFemale = data.map(x=>{if(x["Relationship"]==relation[1]&&x["Gender"]==gender[1]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
-  var numSelf = data.map(x=>{if(x["Relationship"]==relation[2]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
-  var numPartner = data.map(x=>{if(x["Relationship"]==relation[3]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
-  var numChildren = data.map(x=>{if(x["Relationship"]==relation[4]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numParentMale = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[0]&&x["Gender"]==gender[0]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numParentFemale = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[0]&&x["Gender"]==gender[1]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numinlawMale = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[1]&&x["Gender"]==gender[0]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numinlawFemale = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[1]&&x["Gender"]==gender[1]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numSelf = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[2]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numPartner = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[3]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  var numChildren = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[4]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
   var criteriaOptions = Array.from(new Set(data.map(x=>x[refugeeCriteria])))
 
   var totals = [numParentMale,numParentFemale,numinlawMale,numinlawFemale,numSelf,numPartner,numChildren]
@@ -39,22 +71,22 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   var newScale = d3.scaleLinear().domain([minD, maxD]).range([minR, maxR]);
 
   var locations = {
-  	"Parent/GuardianMale":[maxR, maxR + paddingY],
-  	"Parent/GuardianFemale":[maxR*3 + paddingX, maxR + paddingY],
-  	"In-lawMale":[maxR*5 + paddingX*4, maxR + paddingY],
-  	"In-lawFemale":[maxR*7 + paddingX*5, maxR + paddingY],
+  	"Parent / Stepparent / foster parent / guardianMale":[maxR, maxR + paddingY],
+  	"Parent / Stepparent / foster parent / guardianFemale":[maxR*3 + paddingX, maxR + paddingY],
+  	"Father-in-law / Mother-in-lawMale":[maxR*5 + paddingX*4, maxR + paddingY],
+  	"Father-in-law / Mother-in-lawFemale":[maxR*7 + paddingX*5, maxR + paddingY],
   	"Self":[maxR*2 + paddingX*.5, maxR*3 + paddingY*3],
-  	"Spouse":[maxR*6 + paddingX*4, maxR*3 + paddingY*3],
-  	"Children":[maxR*4 + paddingX*2.5, maxR*5 + paddingY*4]
+  	"Spouse (wife/husband)":[maxR*6 + paddingX*4, maxR*3 + paddingY*3],
+  	"Child / stepchild / foster child / ward":[maxR*4 + paddingX*2.5, maxR*5 + paddingY*4]
   }
   totals = {
-  	"Parent/GuardianMale":numParentMale,
-  	"Parent/GuardianFemale":numParentFemale,
-  	"In-lawMale":numinlawMale,
-  	"In-lawFemale":numinlawFemale,
+  	"Parent / Stepparent / foster parent / guardianMale":numParentMale,
+  	"Parent / Stepparent / foster parent / guardianFemale":numParentFemale,
+  	"Father-in-law / Mother-in-lawMale":numinlawMale,
+  	"Father-in-law / Mother-in-lawFemale":numinlawFemale,
   	"Self":numSelf,
-  	"Spouse":numPartner,
-  	"Children":numChildren
+  	"Spouse (wife/husband)":numPartner,
+  	"Child / stepchild / foster child / ward":numChildren
   }
 
   // -----------------------------------------
@@ -62,18 +94,18 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   // -----------------------------------------
   var pieData = {}
   for(var i=0; i<relation.length;i++){
-  	if(relation[i]=="Parent/Guardian"||relation[i]=="In-law"){
+  	if(relation[i]=="Parent / Stepparent / foster parent / guardian"||relation[i]=="Father-in-law / Mother-in-law"){
   		for(var j=0; j<gender.length;j++){
   			var tempData={}
   			for(var k=0;k<criteriaOptions.length;k++){
-  				tempData[criteriaOptions[k]] = data.map(x=>{if(x["Relationship"]==relation[i]&&x["Gender"]==gender[j]&&x[refugeeCriteria]==criteriaOptions[k]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  				tempData[criteriaOptions[k]] = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[i]&&x["Gender"]==gender[j]&&x[refugeeCriteria]==criteriaOptions[k]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
   			}
   			pieData[relation[i]+gender[j]]=tempData
   		}
   	}else{
   		var tempData={}
   		for(var k=0;k<criteriaOptions.length;k++){
-  			tempData[criteriaOptions[k]] = data.map(x=>{if(x["Relationship"]==relation[i]&&x[refugeeCriteria]==criteriaOptions[k]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
+  			tempData[criteriaOptions[k]] = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[i]&&x[refugeeCriteria]==criteriaOptions[k]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
   		}
   		pieData[relation[i]]=tempData
   	}
@@ -145,7 +177,7 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   .attr("x1", maxR*4 + paddingX*2.5)
   .attr("y1", maxR*3 + paddingY*3)
   .attr("x2", maxR*4 + paddingX*2.5)
-  .attr("y2", locations["Children"][1])
+  .attr("y2", locations["Child / stepchild / foster child / ward"][1])
   .attr("class", "connectingLine");
   
   // -----------------------------------------
@@ -153,24 +185,24 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   // -----------------------------------------
   
   var previous = function(){
-  	var index = allCriteria.findIndex(function(d){return d == refugeeCriteria})
-  	if(index==0){index=allCriteria.length}
+  	var index = allCriteria[criteriaCategory].findIndex(function(d){return d == refugeeCriteria})
+  	if(index==0){index=allCriteria[criteriaCategory].length}
 	svgContainer.remove()
   	var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
         .attr("height", maxR*(10))
         .attr("id","treeSVG")
-  	createTree(svgTree, data, maxR, allCriteria[(index-1)])
+  	createTree(svgTree, dataSource, maxR, allCriteria[criteriaCategory][(index-1)]) //TO-DO MAKE IT WORK ON NESTED CRITERIA
   }
   var next = function(){
-  	var index = allCriteria.findIndex(function(d){return d == refugeeCriteria})
-  	if(index==allCriteria.length-1){index=-1}
+  	var index = allCriteria[criteriaCategory].findIndex(function(d){return d == refugeeCriteria})
+  	if(index==allCriteria[criteriaCategory].length-1){index=-1}
 	svgContainer.remove()
   	var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
         .attr("height", maxR*(10))
         .attr("id","treeSVG")
-  	createTree(svgTree, data, maxR, allCriteria[(index+1)])
+  	createTree(svgTree, dataSource, maxR, allCriteria[criteriaCategory][(index+1)]) //TO-DO MAKE IT WORK ON NESTED CRITERIA
   }
 
   svgContainer.append("line")
@@ -221,12 +253,12 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   // DRAW THE LABELS
   // -----------------------------------------
   svgContainer.append("text")
-  .attr("x", (locations["Parent/GuardianMale"][0]+locations["Parent/GuardianFemale"][0])/2 - 35)
+  .attr("x", (locations["Parent / Stepparent / foster parent / guardianMale"][0]+locations["Parent / Stepparent / foster parent / guardianFemale"][0])/2 - 35)
   .attr("y", paddingY - 9)
   .text("PARENTS")
 
   svgContainer.append("text")
-  .attr("x", (locations["In-lawMale"][0]+locations["In-lawFemale"][0])/2 - 33)
+  .attr("x", (locations["Father-in-law / Mother-in-lawMale"][0]+locations["Father-in-law / Mother-in-lawFemale"][0])/2 - 33)
   .attr("y", paddingY - 9)
   .text("IN-LAWS")
 
@@ -236,13 +268,13 @@ function createTree(svgContainer, data, maxR, refugeeCriteria)
   .text("APPLICANT")
 
   svgContainer.append("text")
-  .attr("x", locations["Spouse"][0] - 37.5)
-  .attr("y", locations["Spouse"][1] + maxR+paddingY)
+  .attr("x", locations["Spouse (wife/husband)"][0] - 37.5)
+  .attr("y", locations["Spouse (wife/husband)"][1] + maxR+paddingY)
   .text("PARTNER")
 
   svgContainer.append("text")
-  .attr("x", locations["Children"][0] - 40)
-  .attr("y", locations["Children"][1] + maxR+paddingY)
+  .attr("x", locations["Child / stepchild / foster child / ward"][0] - 40)
+  .attr("y", locations["Child / stepchild / foster child / ward"][1] + maxR+paddingY)
   .text("CHILDREN")
 
   // -----------------------------------------
@@ -354,27 +386,8 @@ function drawPie(svgContainer,cx,cy,radius,data,colorScheme){
 
 function textSize(text) {
 	var container = d3.select('#conclusions').append("svg")
-	container.append('text').attr("x",-99999).attr("y",-99999).text(text);
+	container.append('text').attr("x",-99999).attr("y",-99999).text(text).attr("class","legendText");
 	var size = container.node().getBBox();
 	container.remove();
 	return { width: size.width, height: size.height };
 }
-
-/*
-// -----------------------------------------
-// SCROLLING INTERACTION
-// -----------------------------------------
-// Initial state
-var scrollPos = 0;
-// adding scroll event
-
-window.addEventListener('scroll', function(){
-  // detects new state and compares it with the new one
-  if ((document.body.getBoundingClientRect()).top > scrollPos)
-    console.log("UP");
-  else
-    console.log("DOWN");
-  // saves the new position for iteration.
-  scrollPos = (document.body.getBoundingClientRect()).top;
-});
-*/

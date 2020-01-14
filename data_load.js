@@ -1,4 +1,4 @@
-var loadData = function (svgMap, svgTree, maxR) {
+var loadData = function (svgMap, svgTree, maxR, criteria) {
     var mapPromises = [
         d3.csv("data/arrivals_by_destination_nationality_2017.csv"),
         d3.json("data/us-states.json"),
@@ -14,7 +14,7 @@ var loadData = function (svgMap, svgTree, maxR) {
 
     var treePromise = [d3.csv("data/survey_data_b.csv")];
     Promise.all(treePromise).then(function (data) {
-        createTree(svgTree, data[0], maxR);
+        createTree(svgTree, data[0], maxR, criteria);
     }).catch(function (error) {
         console.log(error)
     });
@@ -36,7 +36,7 @@ var createViz = function () {
         .attr("height", maxR*(10))
         .attr("id","treeSVG")
 
-    loadData(svgMap, svgTree, maxR);
+    loadData(svgMap, svgTree, maxR,"Health costs covered by gov.org. (mo. in past 12 mo.)");
 };
 
 var div = d3.select("body")
