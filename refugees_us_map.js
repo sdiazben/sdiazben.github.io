@@ -211,6 +211,7 @@ function createMap(svg, data) {
 
 function updateData(arrivals, year, nationality, us_states, circles, projection, div) {
     var slider = document.getElementById("myRange");
+    var radio = 
 
     slider.oninput = function () {
         year = this.value;
@@ -218,7 +219,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
         var cities = citiesData[0];
         var min_arrivals = citiesData[1];
         var max_arrivals = citiesData[2];
-
+        
         circles.data(cities);
 
         circles.exit().remove(); //remove unneeded circles
@@ -233,7 +234,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
 
 function drawCities(circles, projection, div) {
     circles.transition()
-        .duration(1000)
+        .duration(1)
         .attr("class", function (d, i) {
             return "cities " + d.name + " " + d.lat + " " + d.lon;
         })
