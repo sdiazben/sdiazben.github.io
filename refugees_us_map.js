@@ -1,4 +1,4 @@
-var transformData = function (data, us_states_abb, us_coord) {
+function transformData(data, us_states_abb, us_coord) {
     var placements = {};
     for (var i = 0; i < data.length; i++) {
         var line = data[i];
@@ -6,6 +6,10 @@ var transformData = function (data, us_states_abb, us_coord) {
         var state = line["Placement State"];
         var city = line["Placement City"];
         var value = parseInt(line["Value"]);
+<<<<<<< HEAD
+=======
+        var year = parseInt(line["Year"]);
+>>>>>>> 5d166217cc23d0dcc345d39d25654fc3607f8642
         var state_abb = "";
         for (var j = 0; j < us_states_abb.length; j++) {
             var current = us_states_abb[j];
@@ -29,42 +33,37 @@ var transformData = function (data, us_states_abb, us_coord) {
             }
         }
 
-        if (!(nationality in placements))
-            placements[nationality] = {};
-        if (!(state in placements[nationality]))
-            placements[nationality][state] = {};
-        if (!(city in placements[nationality][state]))
-            placements[nationality][state][city] = {};
-        if (!("value" in placements[nationality][state][city]))
-            placements[nationality][state][city]["value"] = 0;
+        if (!(year in placements)) {
+            placements[year] = {};
+        }
+        if (!(nationality in placements[year]))
+            placements[year][nationality] = {};
+        if (!(state in placements[year][nationality]))
+            placements[year][nationality][state] = {};
+        if (!(city in placements[year][nationality][state]))
+            placements[year][nationality][state][city] = {};
+        if (!("value" in placements[year][nationality][state][city]))
+            placements[year][nationality][state][city]["value"] = 0;
         if (longitude != null) {
-            if (!("longitude" in placements[nationality][state][city])) {
-                placements[nationality][state][city]["longitude"] = longitude;
-                placements[nationality][state][city]["latitude"] = latitude;
+            if (!("longitude" in placements[year][nationality][state][city])) {
+                placements[year][nationality][state][city]["longitude"] = longitude;
+                placements[year][nationality][state][city]["latitude"] = latitude;
             }
         }
-        placements[nationality][state][city]["value"] += value;
+        placements[year][nationality][state][city]["value"] += value;
     }
     return placements;
 };
 
-
-var createMap = function (svg, data) {
-    var nationality = "Bhutan"; // We will change that later
-    var us_states = data[1];
-    var us_states_abb = data[2];
-    var us_coord = data[3];
-    var arrivals = transformData(data[0], us_states_abb, us_coord);
-
+function getCitiesData(arrivals, year, nationality, us_states) {
     var min_arrivals = Number.MAX_VALUE;
     var max_arrivals = Number.MIN_VALUE;
-
     var cities = [];
-    for (let state in arrivals[nationality]) {
+    for (let state in arrivals[year][nationality]) {
         var value = 0;
 
-        for (let city in arrivals[nationality][state]) {
-            current = arrivals[nationality][state][city];
+        for (let city in arrivals[year][nationality][state]) {
+            current = arrivals[year][nationality][state][city];
             value += current["value"];
             if ("longitude" in current) {
                 cities.push({
@@ -100,6 +99,22 @@ var createMap = function (svg, data) {
         return 0;
     });
 
+    return [cities, min_arrivals, max_arrivals];
+};
+
+function createMap(svg, data) {
+    var year = 2017;
+
+    var nationality = "Bhutan"; // We will change that later 
+    var us_states = data[1];
+    var us_states_abb = data[2];
+    var us_coord = data[3];
+    var arrivals = transformData(data[0], us_states_abb, us_coord);
+    var citiesData = getCitiesData(arrivals, year, nationality, us_states);
+    var cities = citiesData[0];
+    var min_arrivals = citiesData[1];
+    var max_arrivals = citiesData[2];
+
     var div = d3.select("body")
         .append("div")
         .attr("class", "tooltip")
@@ -124,10 +139,10 @@ var createMap = function (svg, data) {
 
     // Change position of each cell in the legend
     legend.selectAll('.cell')
-    .each(function(d,i) {
-      d3.select(this) 
-      .attr("transform", "translate("+i%5*90+","+Math.floor(i/5)*30+")");
-    });
+        .each(function (d, i) {
+            d3.select(this)
+                .attr("transform", "translate(" + i % 5 * 90 + "," + Math.floor(i / 5) * 30 + ")");
+        });
 
     //change the position and attributes of the text in each cell
     legend.selectAll('.label')
@@ -138,12 +153,12 @@ var createMap = function (svg, data) {
 
     //change attributes of title of legend
     legend.select('.legendTitle')
-    .attr("transform", "translate(10, 0)");
+        .attr("transform", "translate(10, 0)");
 
     var projection = d3.geoAlbersUsa().scale(800).translate([350, 180]);
     var path = d3.geoPath()
         .projection(projection);
-    svg.selectAll('path')
+    var states = svg.selectAll('path')
         .data(us_states.features)
         .enter().append('path')
         .attr("stroke-width", 1)
@@ -152,8 +167,8 @@ var createMap = function (svg, data) {
         .attr("name", function (d) {
             return d.properties.NAME;
         })
-        .attr("d", path)
-        .style("fill", function (d) {
+        .attr("d", path);
+    states.style("fill", function (d) {
 
             // Get data value
             var value = d.properties.arrivals;
@@ -188,7 +203,40 @@ var createMap = function (svg, data) {
     var circles = svg.selectAll("circle")
         .data(cities)
         .enter()
-        .append("circle")
+        .append("circle");
+
+    drawCities(circles, projection, div);
+
+    d3.select("#loading").remove();
+
+    updateData(arrivals, year, nationality, us_states, circles, projection, div);
+};
+
+function updateData(arrivals, year, nationality, us_states, circles, projection, div) {
+    var slider = document.getElementById("myRange");
+
+    slider.oninput = function () {
+        year = this.value;
+        var citiesData = getCitiesData(arrivals, year, nationality, us_states);
+        var cities = citiesData[0];
+        var min_arrivals = citiesData[1];
+        var max_arrivals = citiesData[2];
+
+        circles.data(cities);
+
+        circles.exit().remove(); //remove unneeded circles
+        circles.enter().append("circle")
+            .attr("r", 0); //create any new circles needed
+        drawCities(circles, projection, div);
+
+
+    };
+
+};
+
+function drawCities(circles, projection, div) {
+    circles.transition()
+        .duration(500)
         .attr("class", function (d, i) {
             return "cities " + d.name + " " + d.lat + " " + d.lon;
         })
@@ -203,9 +251,9 @@ var createMap = function (svg, data) {
         })
         .style("fill", "rgb(217,91,67)")
 
-        .style("opacity", 0.85)
+        .style("opacity", 0.85);
 
-        .on("mouseover", function (d) {
+    circles.on("mouseover", function (d) {
             div.transition()
                 .duration(200)
                 .style("opacity", .9);
@@ -213,13 +261,10 @@ var createMap = function (svg, data) {
                 .style("left", (d3.event.pageX) + "px")
                 .style("top", (d3.event.pageY - 28) + "px");
         })
-
         // fade out tooltip on mouse out               
         .on("mouseout", function (d) {
             div.transition()
                 .duration(500)
                 .style("opacity", 0);
         });
-
-    d3.select("#loading").remove();
-};
+}
