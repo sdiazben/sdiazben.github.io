@@ -1,4 +1,4 @@
-var transformData = function (data, us_states_abb, us_coord) {
+function transformData(data, us_states_abb, us_coord) {
     var placements = {};
     for (var i = 0; i < data.length; i++) {
         var line = data[i];
@@ -49,7 +49,7 @@ var transformData = function (data, us_states_abb, us_coord) {
 };
 
 
-var createMap = function (svg, data) {
+function createMap(svg, data) {
     var nationality = "Bhutan"; // We will change that later
     var us_states = data[1];
     var us_states_abb = data[2];
