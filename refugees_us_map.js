@@ -6,10 +6,7 @@ function transformData(data, us_states_abb, us_coord) {
         var state = line["Placement State"];
         var city = line["Placement City"];
         var value = parseInt(line["Value"]);
-<<<<<<< HEAD
-=======
         var year = parseInt(line["Year"]);
->>>>>>> 5d166217cc23d0dcc345d39d25654fc3607f8642
         var state_abb = "";
         for (var j = 0; j < us_states_abb.length; j++) {
             var current = us_states_abb[j];
