@@ -233,18 +233,50 @@ function drawLegend(colorScale, svg) {
 function updateData(arrivals, year, nationality, us_states, circles, projection, div, svg, legend, states,path) {
     var slider = document.getElementById("myRange");
     var radio = document.getElementsByName('Country');
+    var radioCrit = document.getElementsByName('CriteriaCategory');
 
     slider.oninput = function () {
         year = this.value;
+        yearTree = this.value;
         legend = updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path);
 
+        d3.select("#tree").html("");
+        var svgTree = d3.select("#tree").append("svg")
+        .attr("width", maxR*(9)) 
+        .attr("height", maxR*(10))
+        .attr("id","treeSVG")
+        createTree(svgTree);
     };
+
+    for (var i = 0, len = radioCrit.length; i < len; i++) {
+        radioCrit[i].onclick = function () { // assign onclick handler function to each
+            // put clicked radio button's value in total field
+            criteriaCategory = this.value;
+            refugeeCriteria = allCriteria[criteriaCategory][0];
+
+            d3.select("#tree").html("");
+            var svgTree = d3.select("#tree").append("svg")
+            .attr("width", maxR*(9)) 
+            .attr("height", maxR*(10))
+            .attr("id","treeSVG")
+            createTree(svgTree);
+        };
+
+    }
 
     for (var i = 0, len = radio.length; i < len; i++) {
         radio[i].onclick = function () { // assign onclick handler function to each
             // put clicked radio button's value in total field
             nationality = this.value;
+            nationalityTree = this.value;
             legend = updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path)
+
+            d3.select("#tree").html("");
+            var svgTree = d3.select("#tree").append("svg")
+            .attr("width", maxR*(9)) 
+            .attr("height", maxR*(10))
+            .attr("id","treeSVG")
+            createTree(svgTree);
         };
 
     }

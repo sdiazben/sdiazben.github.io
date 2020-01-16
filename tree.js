@@ -1,34 +1,35 @@
+
 var allCriteria = {
   "Health":["Health costs covered by gov.org. (mo. in past 12 mo.)","Medical expenses covered by","Bad health 6 mo. or more preventing work","Usual medical care source"],
   "Financial":["Earnings ($US) past 12 months","Goverment aid received","Received food stamps"],
   "Residency":["Applied for permanent residency year","Planning immigration status change"],
   "Education":["Highest degree before entry","Years of schooling before entry","Currently enrolled in english courses","Level of english now","Participate in children education"],
   "Employment":["Employment before entry","Work status","Time for first employement in the US (years)","Attended university or training past 12 months","Job training duration (weeks)","Work hours per week","Works more than one job since last week","Job business kind or industry"]
-}
+};
 
-function createTree(svgContainer, dataSource, maxR, refugeeCriteria)
+function createTree(svgContainer)
 {
-  console.log(refugeeCriteria)
   // -----------------------------------------
   // CRITERIA
   // -----------------------------------------
   var slider = document.getElementById("myRange");
   switch(slider.value){
     case "2011":
-      year = "2011 or earlier"
+      yearTree = "2011 or earlier"
       break;
     case "2015":
     case "2016":
     case "2017":
-      year = "2015 or after"
+      yearTree = "2015 or later"
       break;
     default:
-      year = slider.value;
+      yearTree = slider.value;
       break;
   }
+  console.log(yearTree)
 
   var radioCountry = document.getElementsByName('Country');
-  for (var i=0; i<radioCountry.length; i++){if (radioCountry[i].checked) { var nationality = radioCountry[i].value;break;}}
+  for (var i=0; i<radioCountry.length; i++){if (radioCountry[i].checked) { var nationalityTree = radioCountry[i].value;break;}}
 
   var radioCriteria = document.getElementsByName('CriteriaCategory');
   for (var i=0; i<radioCriteria.length; i++){if (radioCriteria[i].checked) { var criteriaCategory = radioCriteria[i].value;break;}}
@@ -46,11 +47,9 @@ function createTree(svgContainer, dataSource, maxR, refugeeCriteria)
 
 
   //REDEFINE DATA = DATASOURCE
-  if(nationality != "All"){
-    var data = dataSource.filter(x=>x["Country Of Birth"]==nationality&&x["Year Of Entry"]==year)
-  }else{
-    var data = dataSource.filter(x=>x["Year Of Entry"]==year)
-  }
+  var data = dataSource
+  data = data.filter(x=>x["Country Of Birth"]==nationalityTree&&x["Year Of Entry"]==yearTree)
+  
 
   var numRows = data.length;
   var numParentMale = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[0]&&x["Gender"]==gender[0]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
@@ -61,6 +60,10 @@ function createTree(svgContainer, dataSource, maxR, refugeeCriteria)
   var numPartner = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[3]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
   var numChildren = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[4]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
   var criteriaOptions = Array.from(new Set(data.map(x=>x[refugeeCriteria])))
+
+  var variables = [numRows, numParentMale, numParentFemale, numinlawMale, numinlawFemale, numSelf, numPartner, numChildren]
+  console.log(variables)
+  console.log(criteriaCategory+refugeeCriteria)
 
   var totals = [numParentMale,numParentFemale,numinlawMale,numinlawFemale,numSelf,numPartner,numChildren]
 
@@ -187,22 +190,28 @@ function createTree(svgContainer, dataSource, maxR, refugeeCriteria)
   var previous = function(){
   	var index = allCriteria[criteriaCategory].findIndex(function(d){return d == refugeeCriteria})
   	if(index==0){index=allCriteria[criteriaCategory].length}
-	svgContainer.remove()
+    refugeeCriteria = allCriteria[criteriaCategory][(index-1)]
+
+
+  	svgContainer.remove()
   	var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
         .attr("height", maxR*(10))
         .attr("id","treeSVG")
-  	createTree(svgTree, dataSource, maxR, allCriteria[criteriaCategory][(index-1)]) //TO-DO MAKE IT WORK ON NESTED CRITERIA
+  	createTree(svgTree) //TO-DO MAKE IT WORK ON NESTED CRITERIA
   }
+
   var next = function(){
   	var index = allCriteria[criteriaCategory].findIndex(function(d){return d == refugeeCriteria})
   	if(index==allCriteria[criteriaCategory].length-1){index=-1}
-	svgContainer.remove()
+    refugeeCriteria = allCriteria[criteriaCategory][(index+1)]
+
+	  svgContainer.remove()
   	var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
         .attr("height", maxR*(10))
         .attr("id","treeSVG")
-  	createTree(svgTree, dataSource, maxR, allCriteria[criteriaCategory][(index+1)]) //TO-DO MAKE IT WORK ON NESTED CRITERIA
+  	createTree(svgTree)
   }
 
   svgContainer.append("line")
