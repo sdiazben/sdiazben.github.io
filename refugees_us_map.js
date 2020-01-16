@@ -213,7 +213,7 @@ function drawLegend(colorScale, svg) {
     legend.selectAll('.cell')
         .each(function (d, i) {
             d3.select(this)
-                .attr("transform", "translate(" + i % 5 * 90 + "," + Math.floor(i / 5) * 30 + ")");
+                .attr("transform", "translate(" + i % 5 * 100 + "," + Math.floor(i / 5) * 30 + ")");
         });
 
     //change the position and attributes of the text in each cell
