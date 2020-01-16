@@ -26,13 +26,14 @@ function createTree(svgContainer)
       yearTree = slider.value;
       break;
   }
-  console.log(yearTree)
 
   var radioCountry = document.getElementsByName('Country');
   for (var i=0; i<radioCountry.length; i++){if (radioCountry[i].checked) { var nationalityTree = radioCountry[i].value;break;}}
 
   var radioCriteria = document.getElementsByName('CriteriaCategory');
   for (var i=0; i<radioCriteria.length; i++){if (radioCriteria[i].checked) { var criteriaCategory = radioCriteria[i].value;break;}}
+
+  d3.select("#treeTitle").html(refugeeCriteria);
 
   var treeTitle = "Education - English level" //TO-DO
   // -----------------------------------------
@@ -61,9 +62,7 @@ function createTree(svgContainer)
   var numChildren = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[4]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
   var criteriaOptions = Array.from(new Set(data.map(x=>x[refugeeCriteria])))
 
-  var variables = [numRows, numParentMale, numParentFemale, numinlawMale, numinlawFemale, numSelf, numPartner, numChildren]
-  console.log(variables)
-  console.log(criteriaCategory+refugeeCriteria)
+  //var variables = [numRows, numParentMale, numParentFemale, numinlawMale, numinlawFemale, numSelf, numPartner, numChildren]
 
   var totals = [numParentMale,numParentFemale,numinlawMale,numinlawFemale,numSelf,numPartner,numChildren]
 
