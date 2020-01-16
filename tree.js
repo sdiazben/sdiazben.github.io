@@ -51,6 +51,11 @@ function createTree(svgContainer)
   var data = dataSource
   data = data.filter(x=>x["Country Of Birth"]==nationalityTree&&x["Year Of Entry"]==yearTree)
   
+  console.log(data)
+  if(data.length==0){
+    d3.select("#treeTitle").html("No data");
+  }
+
 
   var numRows = data.length;
   var numParentMale = data.map(x=>{if(x["Relationship To Head Of Household"]==relation[0]&&x["Gender"]==gender[0]){return 1}else{return 0}}).reduce((x,y)=>{return x+y});
