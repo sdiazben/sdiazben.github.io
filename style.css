@@ -20,7 +20,7 @@ body {
 
 #subTitles, #container{
 	width: 90%;
-	margin: 2% 5%;
+	margin: 2% 0%;
 	padding-left: 10%;
 	position: relative;
 }
@@ -34,7 +34,7 @@ body {
 }
 
 #mapTitle, #map{
-	width: 45%;
+	width: 700px;
 	padding: 0 1% !important;
 	float: left;
 	display: table-cell;
