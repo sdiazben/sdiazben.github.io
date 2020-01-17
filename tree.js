@@ -199,7 +199,7 @@ function createTree(svgContainer)
   	svgContainer.remove()
   	var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
-        .attr("height", maxR*(10))
+        .attr("height", maxR*(10)+20)
         .attr("id","treeSVG")
   	createTree(svgTree) //TO-DO MAKE IT WORK ON NESTED CRITERIA
   }
@@ -212,7 +212,7 @@ function createTree(svgContainer)
 	  svgContainer.remove()
   	var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
-        .attr("height", maxR*(10))
+        .attr("height", maxR*(10)+20)
         .attr("id","treeSVG")
   	createTree(svgTree)
   }

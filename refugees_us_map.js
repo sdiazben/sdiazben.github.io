@@ -245,7 +245,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
         d3.select("#tree").html("");
         var svgTree = d3.select("#tree").append("svg")
         .attr("width", maxR*(9)) 
-        .attr("height", maxR*(10))
+        .attr("height", maxR*(10)+20)
         .attr("id","treeSVG")
         createTree(svgTree);
     };
@@ -259,7 +259,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
             d3.select("#tree").html("");
             var svgTree = d3.select("#tree").append("svg")
             .attr("width", maxR*(9)) 
-            .attr("height", maxR*(10))
+            .attr("height", maxR*(10)+20)
             .attr("id","treeSVG")
             createTree(svgTree);
         };
@@ -276,7 +276,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
             d3.select("#tree").html("");
             var svgTree = d3.select("#tree").append("svg")
             .attr("width", maxR*(9)) 
-            .attr("height", maxR*(10))
+            .attr("height", maxR*(10)+20)
             .attr("id","treeSVG")
             createTree(svgTree);
 
