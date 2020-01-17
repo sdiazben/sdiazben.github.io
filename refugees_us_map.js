@@ -100,6 +100,7 @@ function getCitiesData(arrivals, year, nationality, us_states) {
 };
 
 function createMap(svg, data) {
+    d3.select("#mapTitle").html("US Refugee Arrivals from " + nationalityTree + " " + yearMap);
     var slider = document.getElementById("myRange");
     var year = slider.value;
 
@@ -238,6 +239,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
     slider.oninput = function () {
         year = this.value;
         yearTree = this.value;
+        yearMap = this.value;
         legend = updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path);
 
         d3.select("#tree").html("");
@@ -277,6 +279,7 @@ function updateData(arrivals, year, nationality, us_states, circles, projection,
             .attr("height", maxR*(10))
             .attr("id","treeSVG")
             createTree(svgTree);
+
         };
 
     }
@@ -319,6 +322,7 @@ function drawCities(circles, projection, div) {
 };
 
 function updateDrawings(circles, arrivals, year, nationality, us_states, projection, div, svg, legend, states,path) {
+    d3.select("#mapTitle").html("US Refugee Arrivals from " + nationalityTree + " " + yearMap);
     var citiesData = getCitiesData(arrivals, year, nationality, us_states);
     var cities = citiesData[0];
     var min_arrivals = citiesData[1];

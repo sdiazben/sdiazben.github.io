@@ -2,6 +2,7 @@ var maxR = 50;
 var criteriaCategory = "Health"
 var refugeeCriteria = "Health costs covered by gov.org. (mo. in past 12 mo.)";
 var yearTree = 2011;
+var yearMap = 2011;
 var nationalityTree = "Bhutan"
 var dataSource
 
