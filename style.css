@@ -42,9 +42,11 @@ body {
 }
 
 #treeTitle, #tree{
-	width: 45%;
+	width: 500;
 	padding: 0 1% !important;
 	display: table-cell;
+	word-wrap: normal;
+	overflow-wrap: normal;
 }
 
 #loading {

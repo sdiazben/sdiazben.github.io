@@ -33,7 +33,7 @@ function createTree(svgContainer)
   var radioCriteria = document.getElementsByName('CriteriaCategory');
   for (var i=0; i<radioCriteria.length; i++){if (radioCriteria[i].checked) { var criteriaCategory = radioCriteria[i].value;break;}}
 
-  d3.select("#treeTitle").html(refugeeCriteria);
+  d3.select("#treeTitle").html(refugeeCriteria + " " + yearTree);
 
   var treeTitle = "Education - English level" //TO-DO
   // -----------------------------------------
@@ -51,7 +51,6 @@ function createTree(svgContainer)
   var data = dataSource
   data = data.filter(x=>x["Country Of Birth"]==nationalityTree&&x["Year Of Entry"]==yearTree)
   
-  console.log(data)
   if(data.length==0){
     d3.select("#treeTitle").html("No data");
   }
